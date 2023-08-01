@@ -11,6 +11,7 @@ contract ObjectPassport {
     }
 
     mapping(uint256 => Passport) public passports;
+    mapping(uint256 => mapping(address => bool)) public editableFields;
     uint256 public passportCount;
 
     modifier onlyOwner(uint256 _passportId) {
@@ -49,17 +50,21 @@ contract ObjectPassport {
         passports[_passportId].maintenanceParty = _maintenanceParty;
     }
 
-    function designateCertifyingParty(uint256 _passportId, address _certifyingParty)
+    function assignEditableFields(uint256 _passportId, address _maintenanceParty, bool _canEdit)
         external
         onlyOwner(_passportId)
     {
-        passports[_passportId].certifyingParty = _certifyingParty;
+        editableFields[_passportId][_maintenanceParty] = _canEdit;
     }
 
     function performMaintenance(uint256 _passportId)
         external
         onlyMaintenanceParty(_passportId)
     {
+        require(
+            editableFields[_passportId][msg.sender],
+            "You do not have permission to perform maintenance on this passport"
+        );
         passports[_passportId].maintenancePerformed = true;
     }
 
