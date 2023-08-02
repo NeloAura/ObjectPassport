@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react';
-
-const CertifierCard = ({ passports }) => {
+import { Card, CardHeader, CardBody, CardFooter ,Button ,ChakraBaseProvider} from '@chakra-ui/react';
+const passports = [];
+const CertifierCard = () => {
   // Default data to display when there are no passports
   const defaultData = {
     id: 'Default ID',
@@ -10,9 +10,9 @@ const CertifierCard = ({ passports }) => {
   };
 
   return (
-    <>
+    <ChakraBaseProvider>
       {passports.length === 0 ? (
-        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
+        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4} colorScheme='blue'>
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
             Certifier Passport
           </CardHeader>
@@ -47,7 +47,7 @@ const CertifierCard = ({ passports }) => {
           </Card>
         ))
       )}
-    </>
+      </ChakraBaseProvider>
   );
 };
 

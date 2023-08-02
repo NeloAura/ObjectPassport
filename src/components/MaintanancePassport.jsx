@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardBody, CardFooter, Button } from '@chakra-ui/react';
-
-const MaintenanceCard = ({ passports }) => {
+import { Card, CardHeader, CardBody, CardFooter, Button , ChakraBaseProvider } from '@chakra-ui/react';
+const passports = [];
+const MaintenanceCard = () => {
   // Default data to display when there are no passports
   const defaultData = {
     id: 'Default ID',
@@ -16,10 +16,22 @@ const MaintenanceCard = ({ passports }) => {
   };
 
   return (
-    <>
+    <ChakraBaseProvider>
       {passports.length === 0 ? (
         <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
-          {/* ... Default view card code ... */}
+          <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
+            Certifier Passport
+          </CardHeader>
+          <CardBody>
+            <p>Passport ID: {defaultData.id}</p>
+            <p>Owner: {defaultData.owner}</p>
+            <p>Maintenance Party: {defaultData.maintenanceParty}</p>
+            <p>Certified: {defaultData.certified ? 'Yes' : 'No'}</p>
+          </CardBody>
+          <CardFooter bg="gray.100" textAlign="center" py={2}>
+            No certifier passports available.
+          </CardFooter>
+       
         </Card>
       ) : (
         passports.map((passport) => (
@@ -36,7 +48,7 @@ const MaintenanceCard = ({ passports }) => {
                 Mark Maintenance Performed
               </Button>
               {/* Button to edit owner's details (only if maintenance party has permission) */}
-              {passport.maintenanceParty === YOUR_MANTENANCE_ADDRESS && (
+              {passport.maintenanceParty === "YOUR_MANTENANCE_ADDRESS" && (
                 <>
                   <Button
                     colorScheme="blue"
@@ -56,7 +68,10 @@ const MaintenanceCard = ({ passports }) => {
           </Card>
         ))
       )}
-    </>
+      
+      </ChakraBaseProvider>
+  
+    
   );
 };
 

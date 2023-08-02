@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardBody, CardFooter, Button } from '@chakra-ui/react';
-
-const ObjectPassportCard = ({ passports }) => {
+import { Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider } from '@chakra-ui/react';
+const passports = [];
+const ObjectPassportCard = () => {
   // Default data to display when there are no passports
   const defaultData = {
     id: 'Default ID',
@@ -12,9 +12,9 @@ const ObjectPassportCard = ({ passports }) => {
   };
 
   return (
-    <>
+    <ChakraBaseProvider>
       {passports.length === 0 ? (
-        <Card boxShadow="md" borderRadius="md" maxW="300px">
+        <Card boxShadow="md" borderRadius="md" maxW="300px" colorScheme='blue'>
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
             Object Passport
           </CardHeader>
@@ -55,7 +55,7 @@ const ObjectPassportCard = ({ passports }) => {
           </Card>
         ))
       )}
-    </>
+      </ChakraBaseProvider>
   );
 };
 
