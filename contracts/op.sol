@@ -8,7 +8,18 @@ contract ObjectPassport {
         address certifyingParty;
         bool maintenancePerformed;
         bool certified;
+        string secretKey;
+        MaintenanceRecord[] maintenanceHistory;
+        uint256 lastMaintenanceTimestamp;
     }
+
+    struct MaintenanceRecord {
+        address maintenanceAddress;
+        string changedFields;
+        uint256 timestamp;
+        string comments;
+    }
+
 
     mapping(uint256 => Passport) public passports;
     mapping(uint256 => mapping(address => bool)) public editableFields;
