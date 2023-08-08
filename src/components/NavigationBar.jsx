@@ -24,6 +24,9 @@ import {
   LockIcon,
 } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
+import { useNavigate } from 'react-router-dom';
+
+
 
 const TextInput = React.forwardRef((props, ref) => {
   return (
@@ -91,6 +94,9 @@ const PopoverForm = () => {
   );
 };
 const VerticalNavigationBar = () => {
+
+    const navigate = useNavigate();
+
   return (
     <VStack
       spacing={4}
@@ -120,7 +126,10 @@ const VerticalNavigationBar = () => {
         color="black"
         placement="right"
       >
-        <IconButton icon={<StarIcon />} colorScheme="blue" aria-label="Home" />
+        <IconButton icon={<StarIcon />} colorScheme="blue" aria-label="Home" onClick={() => {
+    navigate('/o'); 
+  }
+}/>
       </Tooltip>
       <Tooltip
         hasArrow
@@ -133,6 +142,8 @@ const VerticalNavigationBar = () => {
           icon={<SettingsIcon />}
           colorScheme="orange"
           aria-label="Maintanance"
+          onClick={() => {
+    navigate('/m');}}
         />
       </Tooltip>
       <Tooltip
@@ -146,6 +157,8 @@ const VerticalNavigationBar = () => {
           icon={<CheckCircleIcon />}
           colorScheme="green"
           aria-label="Certify"
+          onClick={() => {
+    navigate('/c');}}
         />
       </Tooltip>
       <Tooltip
@@ -160,6 +173,8 @@ const VerticalNavigationBar = () => {
           isRound={true}
           colorScheme="red"
           aria-label="LogOut"
+          onClick={() => {
+    navigate('/');}}
         />
       </Tooltip>
     </VStack>

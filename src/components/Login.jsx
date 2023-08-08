@@ -35,7 +35,7 @@ function AuraPassportPage() {
   };
 
   const handleLogin = () => {
-    navigate('/c'); 
+    navigate('/o'); 
   };
 
   return (

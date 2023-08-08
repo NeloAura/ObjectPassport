@@ -1,5 +1,6 @@
-import { Flex ,Box, Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
+import { Flex ,Box,ButtonGroup,Text,Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
 import VerticalNavigationBar from './NavigationBar';
+import AssignPopoverForm from './PopOver/AssignPopOver';
 
 const passports = [];
 const ObjectPassportCard = () => {
@@ -26,8 +27,11 @@ const ObjectPassportCard = () => {
      <Box style={{ position: 'relative' }}>
       {passports.length === 0 ? (
         <Card boxShadow="md" borderRadius="md" maxW="300px" colorScheme='blue' mt="10px">
-          <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
-            Object Passport
+          <CardHeader bg="blue.500"  py={2}  justifyContent="center" textAlign="center">
+           <Text fontSize='20px' color='white' as='b'>Euro Pass</Text>
+            <ButtonGroup display="flex" justifyContent="center">
+              <AssignPopoverForm name={"Transfer"} color={"purple"}/>
+              </ButtonGroup>    
           </CardHeader>
           <CardBody>
             <p>Passport ID: {defaultData.id}</p>
@@ -37,8 +41,11 @@ const ObjectPassportCard = () => {
             <p>Maintenance Performed: {defaultData.maintenancePerformed ? 'Yes' : 'No'}</p>
             <p>Certified: {defaultData.certified ? 'Yes' : 'No'}</p>
           </CardBody>
-          <CardFooter bg="gray.100" textAlign="center" py={2}>
-            No passports available.
+          <CardFooter bg="gray.100" textAlign="center" py={2}  justifyContent="center">
+          <ButtonGroup display="flex" justifyContent="flex-end">
+              <AssignPopoverForm name={"Certifier"} color={"green"}/>
+              <AssignPopoverForm name={"Maintenance"} color={"orange"}/>
+              </ButtonGroup>    
           </CardFooter>
         </Card>
       ) : (
@@ -55,7 +62,7 @@ const ObjectPassportCard = () => {
               <p>Maintenance Performed: {passport.maintenancePerformed ? 'Yes' : 'No'}</p>
               <p>Certified: {passport.certified ? 'Yes' : 'No'}</p>
             </CardBody>
-            <CardFooter bg="gray.100" textAlign="center" py={2}>
+            <CardFooter bg="gray.100" textAlign="center" py={2}  justifyContent="center">
               {/* Button to assign certifiers */}
               <Button colorScheme="green" mr={2}>
                 Assign Certifier

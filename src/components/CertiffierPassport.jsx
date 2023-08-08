@@ -22,7 +22,7 @@ const CertifierCard = () => {
      <Box style={{ position: 'relative' }}>
       {passports.length === 0 ? (
         <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4} colorScheme='blue' mt="10px">
-          <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
+          <CardHeader bg="green.500" color="white" textAlign="center" py={2}>
             Certifier Passport
           </CardHeader>
           <CardBody>
@@ -31,14 +31,16 @@ const CertifierCard = () => {
             <p>Maintenance Party: {defaultData.maintenanceParty}</p>
             <p>Certified: {defaultData.certified ? 'Yes' : 'No'}</p>
           </CardBody>
-          <CardFooter bg="gray.100" textAlign="center" py={2}>
-            No certifier passports available.
+          <CardFooter bg="gray.100"  py={2} justifyContent="center">
+          <Button colorScheme="green" >
+                Mark Certified
+              </Button>
           </CardFooter>
         </Card>
       ) : (
         passports.map((passport) => (
           <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4} mt="10px">
-            <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
+            <CardHeader bg="green.500" color="white" textAlign="center" py={2}>
               Certifier Passport
             </CardHeader>
             <CardBody>
