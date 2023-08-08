@@ -20,7 +20,6 @@ contract ObjectPassport {
         string comments;
     }
 
-
     mapping(uint256 => Passport) public passports;
     mapping(uint256 => mapping(address => bool)) public editableFields;
     uint256 public passportCount;
@@ -68,7 +67,7 @@ contract ObjectPassport {
         editableFields[_passportId][_maintenanceParty] = _canEdit;
     }
 
-    function performMaintenance(uint256 _passportId)
+    function performMaintenance(uint256 _passportId, string memory _changedFields, string memory _comments)
         external
         onlyMaintenanceParty(_passportId)
     {
@@ -76,7 +75,19 @@ contract ObjectPassport {
             editableFields[_passportId][msg.sender],
             "You do not have permission to perform maintenance on this passport"
         );
-        passports[_passportId].maintenancePerformed = true;
+
+        Passport storage passport = passports[_passportId];
+        passport.maintenancePerformed = true;
+        passport.lastMaintenanceTimestamp = block.timestamp;
+
+        MaintenanceRecord memory newRecord = MaintenanceRecord({
+            maintenanceAddress: msg.sender,
+            changedFields: _changedFields,
+            timestamp: block.timestamp,
+            comments: _comments
+        });
+
+        passport.maintenanceHistory.push(newRecord);
     }
 
     function certifyObject(uint256 _passportId)

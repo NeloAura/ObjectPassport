@@ -17,6 +17,7 @@ const MaintenanceCard = () => {
 
   return (
     <ChakraBaseProvider>
+    
       {passports.length === 0 ? (
         <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>

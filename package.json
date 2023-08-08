@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -14,7 +15,7 @@
     "chai": "^4.3.7",
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.2",
-    "framer-motion": "^10.15.0",
+    "framer-motion": "^10.15.1",
     "hardhat": "^2.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
