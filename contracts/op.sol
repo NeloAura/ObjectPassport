@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import "hardhat/console.sol";
 
 contract ObjectPassport {
     struct Passport {
@@ -8,6 +9,8 @@ contract ObjectPassport {
         address certifyingParty;
         bool maintenancePerformed;
         bool certified;
+        string name;
+        string discription;
         string secretKey;
         MaintenanceRecord[] maintenanceHistory;
         uint256 lastMaintenanceTimestamp;
@@ -21,8 +24,11 @@ contract ObjectPassport {
     }
 
     mapping(uint256 => Passport) public passports;
+    mapping(address => uint256[]) public passportsByOwner;
     mapping(uint256 => mapping(address => bool)) public editableFields;
     uint256 public passportCount;
+
+    event OwnerSet(address indexed oldOwner, address indexed newOwner);
 
     modifier onlyOwner(uint256 _passportId) {
         require(
@@ -31,6 +37,7 @@ contract ObjectPassport {
         );
         _;
     }
+
 
     modifier onlyMaintenanceParty(uint256 _passportId) {
         require(
@@ -48,9 +55,20 @@ contract ObjectPassport {
         _;
     }
 
-    function createPassport() external {
+    function createPassport(string memory name,string memory discription) external {
         passportCount++;
         passports[passportCount].owner = msg.sender;
+        passports[passportCount].name = name;
+        passports[passportCount].discription = discription;
+    }
+
+    function changeOwner(address newOwner, uint256 _passportId) public onlyOwner(_passportId) {
+        emit OwnerSet(passports[_passportId].owner, newOwner);
+        passports[_passportId].owner = newOwner;
+    }
+
+    function getOwner(uint256 _passportId) external view returns (address) {
+        return passports[_passportId].owner;
     }
 
     function designateMaintenanceParty(uint256 _passportId, address _maintenanceParty)

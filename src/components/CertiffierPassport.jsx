@@ -1,4 +1,5 @@
-import { Card, CardHeader, CardBody, CardFooter ,Button ,ChakraBaseProvider} from '@chakra-ui/react';
+import VerticalNavigationBar from './NavigationBar';
+import { Flex ,Box,Card, CardHeader, CardBody, CardFooter ,Button ,ChakraBaseProvider, extendTheme} from '@chakra-ui/react';
 const passports = [];
 const CertifierCard = () => {
   // Default data to display when there are no passports
@@ -9,10 +10,18 @@ const CertifierCard = () => {
     certified: false,
   };
 
+  const theme = extendTheme({
+    
+  });
+
   return (
-    <ChakraBaseProvider>
+    <ChakraBaseProvider theme={theme}>
+    
+    <Flex>
+     <VerticalNavigationBar/>
+     <Box style={{ position: 'relative' }}>
       {passports.length === 0 ? (
-        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4} colorScheme='blue'>
+        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4} colorScheme='blue' mt="10px">
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
             Certifier Passport
           </CardHeader>
@@ -28,7 +37,7 @@ const CertifierCard = () => {
         </Card>
       ) : (
         passports.map((passport) => (
-          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
+          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4} mt="10px">
             <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
               Certifier Passport
             </CardHeader>
@@ -47,6 +56,8 @@ const CertifierCard = () => {
           </Card>
         ))
       )}
+      </Box>
+      </Flex>
       </ChakraBaseProvider>
   );
 };

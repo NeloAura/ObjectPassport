@@ -1,4 +1,4 @@
-import { Flex , Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider } from '@chakra-ui/react';
+import { Flex ,Box, Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
 import VerticalNavigationBar from './NavigationBar';
 
 const passports = [];
@@ -14,13 +14,18 @@ const ObjectPassportCard = () => {
     certified: false,
   };
 
+  const theme = extendTheme({
+    
+  });
+
   return (
-    <ChakraBaseProvider>
+    <ChakraBaseProvider theme={theme}>
+    
     <Flex>
      <VerticalNavigationBar/>
-     <div>
+     <Box style={{ position: 'relative' }}>
       {passports.length === 0 ? (
-        <Card boxShadow="md" borderRadius="md" maxW="300px" colorScheme='blue'>
+        <Card boxShadow="md" borderRadius="md" maxW="300px" colorScheme='blue' mt="10px">
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
             Object Passport
           </CardHeader>
@@ -38,7 +43,7 @@ const ObjectPassportCard = () => {
         </Card>
       ) : (
         passports.map((passport) => (
-          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
+          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4} mt="10px">
             <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
               Object Passport
             </CardHeader>
@@ -61,7 +66,7 @@ const ObjectPassportCard = () => {
           </Card>
         ))
       )}
-      </div>
+      </Box>
       </Flex>
       </ChakraBaseProvider>
   );

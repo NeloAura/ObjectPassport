@@ -1,4 +1,5 @@
-import { Card, CardHeader, CardBody, CardFooter, Button , ChakraBaseProvider } from '@chakra-ui/react';
+import VerticalNavigationBar from './NavigationBar';
+import { Flex ,Box, Card, CardHeader, CardBody, CardFooter, Button , ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
 const passports = [];
 const MaintenanceCard = () => {
   // Default data to display when there are no passports
@@ -9,17 +10,25 @@ const MaintenanceCard = () => {
     maintenancePerformed: false,
   };
 
+  const theme = extendTheme({
+    
+  });
   // Function to handle editing of owner's details
   const handleEditOwnerDetails = (passportId) => {
     // Implement the logic to allow the maintenance party to edit owner's details for the given passportId
     // You can use a separate modal or form to handle the editing process.
   };
 
+
+
   return (
-    <ChakraBaseProvider>
+    <ChakraBaseProvider theme={theme}>
     
+    <Flex>
+     <VerticalNavigationBar/>
+     <Box style={{ position: 'relative' }}>
       {passports.length === 0 ? (
-        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
+        <Card boxShadow="md" borderRadius="md" maxW="300px" mb={4} mt="10px">
           <CardHeader bg="blue.500" color="white" textAlign="center" py={2}>
             Certifier Passport
           </CardHeader>
@@ -36,7 +45,7 @@ const MaintenanceCard = () => {
         </Card>
       ) : (
         passports.map((passport) => (
-          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4}>
+          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="300px" mb={4} mt="10px">
             <CardHeader bg="green.500" color="white" textAlign="center" py={2}>
               Maintenance Passport
             </CardHeader>
@@ -70,6 +79,8 @@ const MaintenanceCard = () => {
         ))
       )}
       
+      </Box>
+      </Flex>
       </ChakraBaseProvider>
   
     
