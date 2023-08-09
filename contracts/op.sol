@@ -10,15 +10,15 @@ contract ObjectPassport {
         bool maintenancePerformed;
         bool certified;
         string name;
-        string discription;
-        string secretKey;
+        string description;
         MaintenanceRecord[] maintenanceHistory;
         uint256 lastMaintenanceTimestamp;
+        string editableFields;
+        uint256 expirationDate;
     }
 
     struct MaintenanceRecord {
         address maintenanceAddress;
-        string changedFields;
         uint256 timestamp;
         string comments;
     }
@@ -55,11 +55,25 @@ contract ObjectPassport {
         _;
     }
 
-    function createPassport(string memory name,string memory discription) external {
+    function getAllPassportIds() external view returns (uint256[] memory) {
+    uint256[] memory passportIds = new uint256[](passportCount);
+    for (uint256 i = 0; i < passportCount; i++) {
+        passportIds[i] = i + 1;
+    }
+    return passportIds;
+}
+
+function getPassportDetails(uint256 _passportId) external view returns (Passport memory) {
+    require(_passportId > 0 && _passportId <= passportCount, "Invalid passport ID");
+    return passports[_passportId];
+}
+
+
+    function createPassport(string memory name,string memory description) external {
         passportCount++;
         passports[passportCount].owner = msg.sender;
         passports[passportCount].name = name;
-        passports[passportCount].discription = discription;
+        passports[passportCount].description = description;
     }
 
     function changeOwner(address newOwner, uint256 _passportId) public onlyOwner(_passportId) {
@@ -71,47 +85,44 @@ contract ObjectPassport {
         return passports[_passportId].owner;
     }
 
-    function designateMaintenanceParty(uint256 _passportId, address _maintenanceParty)
+    function designateMaintenanceParty(uint256 _passportId, address _maintenanceParty , string memory _editableFields)
         external
         onlyOwner(_passportId)
     {
         passports[_passportId].maintenanceParty = _maintenanceParty;
+        passports[_passportId].editableFields = _editableFields;
     }
 
-    function assignEditableFields(uint256 _passportId, address _maintenanceParty, bool _canEdit)
-        external
-        onlyOwner(_passportId)
-    {
-        editableFields[_passportId][_maintenanceParty] = _canEdit;
-    }
+    
+ function performMaintenance(
+    uint256 _passportId,
+    string memory _comments,
+    string memory _name,
+    string memory _description,
+    uint256 _expirationDate
+) external onlyMaintenanceParty(_passportId) {
+    
+    Passport storage passport = passports[_passportId];
+    passport.maintenancePerformed = true;
+    passport.lastMaintenanceTimestamp = block.timestamp;
 
-    function performMaintenance(uint256 _passportId, string memory _changedFields, string memory _comments)
-        external
-        onlyMaintenanceParty(_passportId)
-    {
-        require(
-            editableFields[_passportId][msg.sender],
-            "You do not have permission to perform maintenance on this passport"
-        );
+    MaintenanceRecord memory newRecord = MaintenanceRecord({
+        maintenanceAddress: msg.sender,
+        timestamp: block.timestamp,
+        comments: _comments
+    });
 
-        Passport storage passport = passports[_passportId];
-        passport.maintenancePerformed = true;
-        passport.lastMaintenanceTimestamp = block.timestamp;
+    passport.maintenanceHistory.push(newRecord);
 
-        MaintenanceRecord memory newRecord = MaintenanceRecord({
-            maintenanceAddress: msg.sender,
-            changedFields: _changedFields,
-            timestamp: block.timestamp,
-            comments: _comments
-        });
+    // Update passport data
+    passport.name = _name;
+    passport.description = _description;
+    passport.expirationDate = _expirationDate;
+}
 
-        passport.maintenanceHistory.push(newRecord);
-    }
 
-    function certifyObject(uint256 _passportId)
-        external
-        onlyCertifyingParty(_passportId)
-    {
+function certifyObject(uint256 _passportId) external onlyCertifyingParty(_passportId) {
         passports[_passportId].certified = true;
+        passports[_passportId].expirationDate = block.timestamp + 2 * 365 days;
     }
 }

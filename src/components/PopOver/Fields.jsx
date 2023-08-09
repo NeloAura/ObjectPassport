@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  FormControl,
-  FormLabel,
   Stack,
   ButtonGroup,
   Button,
@@ -11,14 +9,16 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverCloseButton,
+  Checkbox,
+  FormControl,
+  FormLabel,
   Input,
+
 } from "@chakra-ui/react";
 import {
   PlusSquareIcon,
 } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
-
-
 
 
 const TextInput = React.forwardRef((props, ref) => {
@@ -30,20 +30,37 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const Form = ({ firstFieldRef, onCancel ,formbutton}) => {
+
+const Form = ({  onCancel , firstFieldRef , formbutton }) => {
   return (
     <Stack spacing={4}>
-      <TextInput
+    <TextInput
         label="Wallet Address"
         id="address"
         ref={firstFieldRef}
         defaultValue=""
       />
+
+      
+      <FormLabel htmlFor="id">Maintanance Fields</FormLabel>
+      
+      <Stack spacing={5} direction="row">
+
+        <Checkbox colorScheme="purple" defaultChecked>
+          Name
+        </Checkbox>
+        <Checkbox colorScheme="green" >
+          Desc
+        </Checkbox>
+        <Checkbox colorScheme="blue" >
+        Exipiration Date
+        </Checkbox>
+      </Stack>
       <ButtonGroup display="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button  colorScheme="teal" onClick={onCancel}>
+        <Button colorScheme="red" onClick={onCancel}>
           {formbutton}
         </Button>
       </ButtonGroup>
@@ -51,7 +68,7 @@ const Form = ({ firstFieldRef, onCancel ,formbutton}) => {
   );
 };
 
-const AssignPopoverForm = ({name ,color , formbutton}) => {
+const FieldForm = ({name ,color , formbutton}) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -66,17 +83,15 @@ const AssignPopoverForm = ({name ,color , formbutton}) => {
         closeOnBlur={false}
       >
         <PopoverTrigger>
-         
-            <Button leftIcon={<PlusSquareIcon/>} colorScheme={color} variant='solid'>
-             {name}
-            </Button>
-         
+          <Button leftIcon={<PlusSquareIcon/>} colorScheme={color} variant="solid">
+            {name}
+          </Button>
         </PopoverTrigger>
         <PopoverContent p={5}>
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow />
             <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton}/>
+            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton} />
           </FocusLock>
         </PopoverContent>
       </Popover>
@@ -84,4 +99,4 @@ const AssignPopoverForm = ({name ,color , formbutton}) => {
   );
 };
 
-export default AssignPopoverForm;
+export default FieldForm;

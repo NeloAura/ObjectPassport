@@ -1,6 +1,7 @@
 import { Flex ,Box,ButtonGroup,Text,Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
 import VerticalNavigationBar from './NavigationBar';
 import AssignPopoverForm from './PopOver/AssignPopOver';
+import FieldForm from './PopOver/Fields';
 
 const passports = [];
 const ObjectPassportCard = () => {
@@ -30,7 +31,7 @@ const ObjectPassportCard = () => {
           <CardHeader bg="blue.500"  py={2}  justifyContent="center" textAlign="center">
            <Text fontSize='20px' color='white' as='b'>Euro Pass</Text>
             <ButtonGroup display="flex" justifyContent="center">
-              <AssignPopoverForm name={"Transfer"} color={"purple"}/>
+              <AssignPopoverForm name={"Transfer"} color={"purple"} formbutton={"Transfer"}/>
               </ButtonGroup>    
           </CardHeader>
           <CardBody>
@@ -43,8 +44,8 @@ const ObjectPassportCard = () => {
           </CardBody>
           <CardFooter bg="gray.100" textAlign="center" py={2}  justifyContent="center">
           <ButtonGroup display="flex" justifyContent="flex-end">
-              <AssignPopoverForm name={"Certifier"} color={"green"}/>
-              <AssignPopoverForm name={"Maintenance"} color={"orange"}/>
+              <AssignPopoverForm name={"Certifier"} color={"green"} formbutton={"Assign"}/>
+              <FieldForm name={"Maintenance"} color={"orange"} formbutton={"Assign"} button={<FieldForm/>}/>
               </ButtonGroup>    
           </CardFooter>
         </Card>

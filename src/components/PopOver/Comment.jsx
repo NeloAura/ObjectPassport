@@ -13,9 +13,6 @@ import {
   PopoverCloseButton,
   Input,
 } from "@chakra-ui/react";
-import {
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 
 
@@ -30,12 +27,12 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const Form = ({ firstFieldRef, onCancel ,formbutton}) => {
+const Form = ({ firstFieldRef, onCancel}) => {
   return (
     <Stack spacing={4}>
       <TextInput
-        label="Wallet Address"
-        id="address"
+        label="Comment"
+        id="comment"
         ref={firstFieldRef}
         defaultValue=""
       />
@@ -44,14 +41,14 @@ const Form = ({ firstFieldRef, onCancel ,formbutton}) => {
           Cancel
         </Button>
         <Button  colorScheme="teal" onClick={onCancel}>
-          {formbutton}
+          Submit
         </Button>
       </ButtonGroup>
     </Stack>
   );
 };
 
-const AssignPopoverForm = ({name ,color , formbutton}) => {
+const CommentForm = ({name ,color}) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -67,7 +64,7 @@ const AssignPopoverForm = ({name ,color , formbutton}) => {
       >
         <PopoverTrigger>
          
-            <Button leftIcon={<PlusSquareIcon/>} colorScheme={color} variant='solid'>
+            <Button  colorScheme={color} variant='solid'>
              {name}
             </Button>
          
@@ -76,7 +73,7 @@ const AssignPopoverForm = ({name ,color , formbutton}) => {
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow />
             <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton}/>
+            <Form firstFieldRef={firstFieldRef} onCancel={onClose} />
           </FocusLock>
         </PopoverContent>
       </Popover>
@@ -84,4 +81,4 @@ const AssignPopoverForm = ({name ,color , formbutton}) => {
   );
 };
 
-export default AssignPopoverForm;
+export default CommentForm;

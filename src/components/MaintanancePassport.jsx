@@ -16,6 +16,7 @@ import {
   Badge
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
+import CommentForm from "./PopOver/Comment";
 
 const passports = [];
 
@@ -93,13 +94,7 @@ const MaintenanceCard = () => {
                 py={2}
                 justifyContent="center"
               >
-                <Button
-                  colorScheme="green"
-                  ml={2}
-                  onClick={handleEditOwnerDetails}
-                >
-                  Save
-                </Button>
+                <CommentForm color={"green"} name={"Save"}/>
               </CardFooter>
             </Card>
           ) : (
