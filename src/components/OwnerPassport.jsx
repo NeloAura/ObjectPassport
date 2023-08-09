@@ -1,10 +1,44 @@
-import { Flex ,Box,ButtonGroup,Text,Card, CardHeader, CardBody, CardFooter, Button ,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
+import { Flex ,Box,ButtonGroup,Text,Card, CardHeader, CardBody, CardFooter,ChakraBaseProvider , extendTheme } from '@chakra-ui/react';
 import VerticalNavigationBar from './NavigationBar';
 import AssignPopoverForm from './PopOver/AssignPopOver';
 import FieldForm from './PopOver/Fields';
+import React, { useState, useEffect } from "react";
+import { AbiCoder } from "ethers"; 
+import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
-const passports = [];
+
+
 const ObjectPassportCard = () => {
+ 
+  const [passports, setPassports] = useState([]);
+
+  const contractAddress = "0xdE27e2FeDE1b48d61b9dDfb4473F040b54C260C6";
+  const abi = ObjectPassportAbi; 
+  const jsonRpcProvider = "https://polygon-mumbai.infura.io/v3/d9e4d3de366746b88f8e6c91867018bd"; 
+
+  useEffect(() => {
+    const fetchPassports = async () => {
+      try {
+        const provider = new AbiCoder.providers.JsonRpcProvider(jsonRpcProvider);
+        const contract = new AbiCoder.Contract(contractAddress, abi, provider);
+
+        const totalPassports = await contract.passportCount();
+        const passportList = [];
+
+        for (let i = 1; i <= totalPassports; i++) {
+          const passport = await contract.passports(i);
+          passportList.push(passport);
+        }
+
+        setPassports(passportList);
+        console.log(passportList);
+      } catch (error) {
+        console.error("Error fetching passports:", error);
+      }
+    };
+
+    fetchPassports();
+  }, [abi]);
 
   // Default data to display when there are no passports
   const defaultData = {
@@ -64,13 +98,11 @@ const ObjectPassportCard = () => {
               <p>Certified: {passport.certified ? 'Yes' : 'No'}</p>
             </CardBody>
             <CardFooter bg="gray.100" textAlign="center" py={2}  justifyContent="center">
-              {/* Button to assign certifiers */}
-              <Button colorScheme="green" mr={2}>
-                Assign Certifier
-              </Button>
-              {/* Button to assign maintenance party */}
-              <Button colorScheme="blue">Assign Maintenance</Button>
-            </CardFooter>
+          <ButtonGroup display="flex" justifyContent="flex-end">
+              <AssignPopoverForm name={"Certifier"} color={"green"} formbutton={"Assign"}/>
+              <FieldForm name={"Maintenance"} color={"orange"} formbutton={"Assign"} button={<FieldForm/>}/>
+              </ButtonGroup>    
+          </CardFooter>
           </Card>
         ))
       )}

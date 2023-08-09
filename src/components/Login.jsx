@@ -57,13 +57,13 @@ function AuraPassportPage() {
             Where your passport data is secure
           </Text>
           <Input
-            placeholder="Enter your wallet address"
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
             size="lg"
             mt={8}
             width="300px"
             borderRadius="md"
+            color={"white"}
           />
           {!isLoggedIn ? (
             <>
