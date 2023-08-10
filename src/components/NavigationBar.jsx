@@ -25,8 +25,17 @@ import {
 } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useNavigate } from 'react-router-dom';
+import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
+
+const { ethers } = require("ethers");
+const contractAddress = "0x5FD0e620DB95F01c616Be49164c546B0123ac53c";
+const abi = ObjectPassportAbi.abi; 
 
 
+
+async function requestAccount() {
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
+}
 
 const TextInput = React.forwardRef((props, ref) => {
   return (
@@ -37,7 +46,31 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const Form = ({ firstFieldRef, onCancel}) => {
+const Form = ({ firstFieldRef, onCancel }) => {
+  const createPassport = async (name, description) => {
+    try {
+      await requestAccount()
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+      const create = await contract.createPassport(name, description);
+      await create.wait();
+      console.log("Passport created successfully!");
+      // You can handle the success message and any other necessary actions here
+    } catch (error) {
+      console.error("Error creating passport:", error);
+      // Handle error, e.g., show an error message to the user
+    } finally {
+      onCancel(); // Close the popover
+    }
+  };
+
+  const handleCreateClick = () => {
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    createPassport(name, description);
+  };
+
   return (
     <Stack spacing={4}>
       <TextInput
@@ -51,7 +84,7 @@ const Form = ({ firstFieldRef, onCancel}) => {
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button  colorScheme="teal" onClick={onCancel}>
+        <Button colorScheme="teal" onClick={handleCreateClick}>
           Create
         </Button>
       </ButtonGroup>
