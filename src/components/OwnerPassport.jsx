@@ -132,11 +132,17 @@ const ObjectPassportCard = () => {
               >
                 <CardHeader
                   bg="blue.500"
-                  color="white"
                   textAlign="center"
                   py={2}
                 >
-                  {passport.name}
+                  <Text  fontSize="20px" color="white" as="b">{passport.name}</Text>
+                  <ButtonGroup display="flex" justifyContent="center">
+                  <AssignPopoverForm
+                    name={"Transfer"}
+                    color={"purple"}
+                    formbutton={"Transfer"}
+                  />
+                </ButtonGroup>
                 </CardHeader>
                 <CardBody>
                   <p><Badge>Owner:</Badge> {passport.owner}</p>
