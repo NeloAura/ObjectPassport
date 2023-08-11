@@ -93,6 +93,14 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
         passports[_passportId].editableFields = _editableFields;
     }
 
+        function designatecertifyingParty(uint256 _passportId, address _certifyingParty)
+        external
+        onlyOwner(_passportId)
+    {
+        passports[_passportId].certifyingParty = _certifyingParty;
+        
+    }
+
     
  function performMaintenance(
     uint256 _passportId,

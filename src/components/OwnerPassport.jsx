@@ -26,7 +26,7 @@ const ObjectPassportCard = () => {
   const [loading, setLoading] = useState(true);
   const [userWalletAddress, setUserWalletAddress] = useState("");
 
-  const contractAddress = "0x5FD0e620DB95F01c616Be49164c546B0123ac53c";
+  const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
   const abi = ObjectPassportAbi.abi;
 
   useEffect(() => {
@@ -45,7 +45,6 @@ const ObjectPassportCard = () => {
         for (let i = 1; i <= passportCount; i++) {
           const passport = await contract.getPassportDetails(i);
           fetchedPassports.push({ id: i, ...passport });
-          console.log("Fetched passport details");
         }
 
         // Update the state with fetched passports
@@ -59,7 +58,7 @@ const ObjectPassportCard = () => {
     };
 
     fetchPassports();
-  }, [abi, contractAddress, passports , userWalletAddress]);
+  }, [abi, contractAddress, passports, userWalletAddress ]);
 
   
 
@@ -69,7 +68,7 @@ const ObjectPassportCard = () => {
     <ChakraBaseProvider theme={theme}>
       <Flex>
         <VerticalNavigationBar />
-        <Box display="flex" flexDirection="row" minW={"100%"}>
+        <Box display="flex" flexDirection="row" minW={"100%"} bg="lightgrey">
         {loading ? ( 
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
@@ -98,6 +97,7 @@ const ObjectPassportCard = () => {
                 mb={4}
                 mt="10px"
                 mr={3}
+                ml={3}
               >
                 <CardHeader
                   bg="blue.500"
@@ -110,6 +110,7 @@ const ObjectPassportCard = () => {
                     name={"Transfer"}
                     color={"purple"}
                     formbutton={"Transfer"}
+                    id={passport.id}
                   />
                 </ButtonGroup>
                 </CardHeader>
@@ -123,6 +124,7 @@ const ObjectPassportCard = () => {
                     {passport.maintenancePerformed ? "Yes" : "No"}
                   </p>
                   <p><Badge>Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
+                  {/* <p>{passport.editableFields}</p> */}
                 </CardBody>
                 <CardFooter
                   bg="gray.100"
@@ -135,12 +137,14 @@ const ObjectPassportCard = () => {
                       name={"Certifier"}
                       color={"green"}
                       formbutton={"Assign"}
+                      id={passport.id}
                     />
                     <FieldForm
                       name={"Maintenance"}
                       color={"orange"}
                       formbutton={"Assign"}
                       button={<FieldForm />}
+                      id={passport.id}
                     />
                   </ButtonGroup>
                 </CardFooter>

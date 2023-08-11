@@ -1,25 +1,18 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
 
 async function main() {
+  // Get the ObjectPassport contract factory
+  const ObjectPassport = await hre.ethers.getContractFactory("ObjectPassport");
 
+  // Deploy the contract
+  const passport = await ObjectPassport.deploy();
 
-  const passport = await hre.ethers.deployContract("ObjectPassport");
+  // Wait for the deployment to complete
+  await passport.deployed();
 
-  await passport.waitForDeployment();
-
-  console.log(
-    `Contract Deployed `
-  );
+  console.log("Contract Deployed at:", passport.address);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

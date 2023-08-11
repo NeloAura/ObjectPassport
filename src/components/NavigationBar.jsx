@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
-const contractAddress = "0x5FD0e620DB95F01c616Be49164c546B0123ac53c";
+const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
 const abi = ObjectPassportAbi.abi; 
 
 
@@ -134,13 +134,13 @@ const VerticalNavigationBar = () => {
     <VStack
       spacing={4}
       p={4}
-      bg="gray.100"
+      bg="gray.400"
       position="static"
       left={0}
       top={0}
       h="100vh"
       alignItems="flex-start"
-      mr="10px"
+     
     >
      <Tooltip
             hasArrow
