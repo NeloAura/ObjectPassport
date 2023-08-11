@@ -1,6 +1,7 @@
 import {
   Flex,
   Box,
+  Center,
   ButtonGroup,
   Text,
   Card,
@@ -9,7 +10,8 @@ import {
   CardFooter,
   ChakraBaseProvider,
   extendTheme,
-  Badge
+  Badge,
+  Spinner
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import AssignPopoverForm from "./PopOver/AssignPopOver";
@@ -20,6 +22,7 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 const { ethers } = require("ethers");
 const ObjectPassportCard = () => {
   const [passports, setPassports] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const contractAddress = "0x5FD0e620DB95F01c616Be49164c546B0123ac53c";
   const abi = ObjectPassportAbi.abi;
@@ -45,24 +48,17 @@ const ObjectPassportCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching passports:", error);
+        setLoading(false);
       }
     };
 
     fetchPassports();
   }, [abi, contractAddress]);
 
-  // Default data to display when there are no passports
-  const defaultData = {
-    id: "Default ID",
-    owner: "Default Owner",
-    maintenanceParty: "Default Maintenance Party",
-    certifyingParty: "Default Certifying Party",
-    description:"Hello",
-    maintenancePerformed: false,
-    certified: false,
-  };
+  
 
   const theme = extendTheme({});
 
@@ -70,55 +66,25 @@ const ObjectPassportCard = () => {
     <ChakraBaseProvider theme={theme}>
       <Flex>
         <VerticalNavigationBar />
-        <Box display="flex" flexDirection="row" >
-          {passports.length === 0 ? (
-            <Card
-              boxShadow="md"
-              borderRadius="md"
-              maxW="300px"
-              maxH="300px"
-              colorScheme="blue"
-              mt="10px"
-              mr="10px"
-            >
-              <CardHeader
-                bg="blue.500"
-                py={2}
-                justifyContent="center"
-                textAlign="center"
-              >
-                <Text fontSize="20px" color="white" as="b">
-                  Euro Pass
-                </Text>
-                <ButtonGroup display="flex" justifyContent="center">
-                  <AssignPopoverForm
-                    name={"Transfer"}
-                    color={"purple"}
-                    formbutton={"Transfer"}
-                  />
-                </ButtonGroup>
-              </CardHeader>
-              <CardBody>
-                <p>Owner: {defaultData.owner}</p>
-                <p>Maintenance Party: {defaultData.maintenanceParty}</p>
-                <p>Certifying Party: {defaultData.certifyingParty}</p>
-                <p>Description: {defaultData.description}</p>
-                <p>
-                  Maintenance Performed:{" "}
-                  {defaultData.maintenancePerformed ? "Yes" : "No"}
-                </p>
-                <p>Certified: {defaultData.certified ? "Yes" : "No"}</p>
-              </CardBody>
-              <CardFooter
-                bg="gray.100"
-                textAlign="center"
-                py={2}
-                justifyContent="center"
-              >
-                <p>No passport available ,Create </p>
-              </CardFooter>
-            </Card>
+        <Box display="flex" flexDirection="row" minW={"100%"}>
+        {loading ? ( 
+            <Center flexGrow={1} alignItems="center" justifyContent="center">
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+              />
+            </Center>
           ) : (
+            passports.length === 0 ? (
+              <Center flexGrow={1} alignItems="center" justifyContent="center">
+                <Text textAlign="center" color="blue.500" fontSize="24px" as="b">
+                  No passport to show at the moment. Click the + button to add one.
+                </Text>
+              </Center>
+            ) : (
             passports.map((passport) => (
               <Card
                 key={passport.id}
@@ -177,7 +143,7 @@ const ObjectPassportCard = () => {
                 </CardFooter>
               </Card>
             ))
-          )}
+          ))}
         </Box>
       </Flex>
     </ChakraBaseProvider>
