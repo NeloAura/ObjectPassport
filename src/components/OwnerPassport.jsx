@@ -22,7 +22,9 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 const { ethers } = require("ethers");
 const ObjectPassportCard = () => {
   const [passports, setPassports] = useState([]);
+  const [filteredPassports, setFilteredPassporst] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userWalletAddress, setUserWalletAddress] = useState("");
 
   const contractAddress = "0x5FD0e620DB95F01c616Be49164c546B0123ac53c";
   const abi = ObjectPassportAbi.abi;
@@ -36,18 +38,19 @@ const ObjectPassportCard = () => {
       try {
         // Get the total number of passports
         const passportCount = await contract.passportCount();
-        console.log("Total passport count:", passportCount);
+        setUserWalletAddress(provider.provider.selectedAddress);
 
         // Fetch passport details
         const fetchedPassports = [];
         for (let i = 1; i <= passportCount; i++) {
           const passport = await contract.getPassportDetails(i);
-          fetchedPassports.push(passport);
-          console.log("Fetched passport details:", passport);
+          fetchedPassports.push({ id: i, ...passport });
+          console.log("Fetched passport details");
         }
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
+        setFilteredPassporst(passports.filter((passport) => passport.owner.toLowerCase() === userWalletAddress.toLowerCase()))
         setLoading(false);
       } catch (error) {
         console.error("Error fetching passports:", error);
@@ -56,7 +59,7 @@ const ObjectPassportCard = () => {
     };
 
     fetchPassports();
-  }, [abi, contractAddress]);
+  }, [abi, contractAddress, passports , userWalletAddress]);
 
   
 
@@ -78,14 +81,14 @@ const ObjectPassportCard = () => {
               />
             </Center>
           ) : (
-            passports.length === 0 ? (
+            (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
                 <Text textAlign="center" color="blue.500" fontSize="24px" as="b">
                   No passport to show at the moment. Click the + button to add one.
                 </Text>
               </Center>
             ) : (
-            passports.map((passport) => (
+              filteredPassports.map((passport) => (
               <Card
                 key={passport.id}
                 boxShadow="md"
