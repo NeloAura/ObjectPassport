@@ -50,6 +50,7 @@ const ObjectPassportCard = () => {
         // Update the state with fetched passports
         setPassports(fetchedPassports);
         setFilteredPassporst(passports.filter((passport) => passport.owner.toLowerCase() === userWalletAddress.toLowerCase()))
+        // console.log(passports)
         setLoading(false);
       } catch (error) {
         console.error("Error fetching passports:", error);
@@ -124,7 +125,7 @@ const ObjectPassportCard = () => {
                     {passport.maintenancePerformed ? "Yes" : "No"}
                   </p>
                   <p><Badge>Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
-                  {/* <p>{passport.editableFields}</p> */}
+                  <p>{passport.editableFields}</p>
                 </CardBody>
                 <CardFooter
                   bg="gray.100"
