@@ -12,6 +12,8 @@ import {
   PopoverContent,
   PopoverCloseButton,
   Input,
+  Spinner,
+  useToast, // Import useToast
 } from "@chakra-ui/react";
 import {
   PlusSquareIcon,
@@ -23,7 +25,6 @@ const { ethers } = require("ethers");
 const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
 const abi = ObjectPassportAbi.abi; 
 
-
 const TextInput = React.forwardRef((props, ref) => {
   return (
     <FormControl>
@@ -33,8 +34,11 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const Form = ({ firstFieldRef, onCancel ,formbutton, id}) => {
+const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
   const [address, setAddress] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
+  const toast = useToast(); // Initialize the toast
+
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
@@ -50,30 +54,38 @@ const Form = ({ firstFieldRef, onCancel ,formbutton, id}) => {
 
       switch(formbutton) {
         case 'Transfer':
+          setIsWaiting(true); // Set waiting state
           const transferPassport = await contract.changeOwner(formattedAddress, id);
           await transferPassport.wait();
-          console.log("Passport transfered successfully!");
-          return ;
+          console.log("Passport transferred successfully!");
+          setIsWaiting(false); // Reset waiting state
+          break;
 
-          case 'Assign':
-            const assigncertifyingParty = await contract.designatecertifyingParty(id , formattedAddress);
-            await assigncertifyingParty.wait();
-            console.log("Passport assigned successfully!");
+        case 'Assign':
+          setIsWaiting(true); // Set waiting state
+          const assigncertifyingParty = await contract.designatecertifyingParty(id, formattedAddress);
+          await assigncertifyingParty.wait();
+          console.log("Passport assigned successfully!");
+          setIsWaiting(false); // Reset waiting state
+          break;
 
-            break ;  
-        
         default:
-          return console.warn("Unknown form button:", formbutton);;
+          console.warn("Unknown form button:", formbutton);
       }
-      // You can handle the success message and any other necessary actions here
+
+      // Show success toast
+      toast({
+        title: `${formbutton} successful`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.error("Error transfering passport:", error);
-      // Handle error, e.g., show an error message to the user
+      console.error("Error transferring/passport:", error);
     } finally {
       onCancel(); // Close the popover
     }
   };
-
 
   const handleCreateClick = () => {
     AssignFunctions(formbutton);
@@ -81,26 +93,35 @@ const Form = ({ firstFieldRef, onCancel ,formbutton, id}) => {
 
   return (
     <Stack spacing={4}>
-      <TextInput
-        label="Wallet Address"
-        id="address"
-        ref={firstFieldRef}
-        value={address} // Bind the state variable to the input value
-        onChange={(event) => setAddress(event.target.value)} // Update the state when the input changes
-      />
-      <ButtonGroup display="flex" justifyContent="flex-end">
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button  colorScheme="teal" onClick={handleCreateClick}>
-          {formbutton}
-        </Button>
-      </ButtonGroup>
-    </Stack>
+    {!isWaiting && (
+      <>
+        <TextInput
+          label="Wallet Address"
+          id="address"
+          ref={firstFieldRef}
+          value={address}
+          onChange={(event) => setAddress(event.target.value)}
+        />
+        <ButtonGroup display="flex" justifyContent="flex-end">
+          <Button variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button colorScheme="teal" onClick={handleCreateClick}>
+            {formbutton}
+          </Button>
+        </ButtonGroup>
+      </>
+    )}
+    {isWaiting && (
+      <Flex align="center" justify="center" p={4}>
+        <Spinner color="blue.500" />
+      </Flex>
+    )}
+  </Stack>
   );
 };
 
-const AssignPopoverForm = ({name ,color , formbutton ,id}) => {
+const AssignPopoverForm = ({ name, color, formbutton, id }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -115,17 +136,15 @@ const AssignPopoverForm = ({name ,color , formbutton ,id}) => {
         closeOnBlur={false}
       >
         <PopoverTrigger>
-         
-            <Button leftIcon={<PlusSquareIcon/>} colorScheme={color} variant='solid'>
-             {name}
-            </Button>
-         
+          <Button leftIcon={<PlusSquareIcon />} colorScheme={color} variant="solid">
+            {name}
+          </Button>
         </PopoverTrigger>
         <PopoverContent p={5}>
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow />
             <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton} id={id}/>
+            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton} id={id} />
           </FocusLock>
         </PopoverContent>
       </Popover>
