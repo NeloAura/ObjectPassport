@@ -40,7 +40,7 @@ const CommentForm = ({button ,color , id ,name, description,expirationDate}) => 
         initialFocusRef={firstFieldRef}
         onOpen={onOpen}
         onClose={onClose}
-        placement="bottom"
+        placement="right"
         closeOnBlur={false}
       >
         <PopoverTrigger>

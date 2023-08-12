@@ -111,7 +111,7 @@ const AssignPopoverForm = ({name ,color , formbutton ,id}) => {
         initialFocusRef={firstFieldRef}
         onOpen={onOpen}
         onClose={onClose}
-        placement="bottom"
+        placement="right"
         closeOnBlur={false}
       >
         <PopoverTrigger>

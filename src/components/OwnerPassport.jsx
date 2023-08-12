@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Box,
@@ -11,12 +12,13 @@ import {
   ChakraBaseProvider,
   extendTheme,
   Badge,
-  Spinner
+  Spinner,
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import AssignPopoverForm from "./PopOver/AssignPopOver";
 import FieldForm from "./PopOver/Fields";
-import React, { useState, useEffect } from "react";
+import History from "./PopOver/History";
+
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
@@ -50,7 +52,7 @@ const ObjectPassportCard = () => {
         // Update the state with fetched passports
         setPassports(fetchedPassports);
         setFilteredPassporst(passports.filter((passport) => passport.owner.toLowerCase() === userWalletAddress.toLowerCase()))
-        // console.log(passports)
+        console.log(passports)
         setLoading(false);
       } catch (error) {
         console.error("Error fetching passports:", error);
@@ -125,7 +127,9 @@ const ObjectPassportCard = () => {
                     {passport.maintenancePerformed ? "Yes" : "No"}
                   </p>
                   <p><Badge>Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
-                  <p>{passport.editableFields}</p>
+                  <ButtonGroup display="flex" justifyContent="center" mt={5} >
+                  <History name={"History"} passport={passport} />
+                </ButtonGroup>
                 </CardBody>
                 <CardFooter
                   bg="gray.100"

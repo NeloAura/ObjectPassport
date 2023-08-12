@@ -4,6 +4,7 @@ import {
   Box,
   Center,
   Card,
+  ButtonGroup,
   CardHeader,
   CardBody,
   CardFooter,
@@ -19,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import CommentForm from "./PopOver/Comment";
+import History from "./PopOver/History";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
 
@@ -172,6 +174,9 @@ const MaintenanceCard = () => {
                         isDisabled={!editableFields.includes("expirationDate")}
                       />
                     </InputGroup>
+                    <ButtonGroup display="flex" justifyContent="center" mt={5} >
+                  <History name={"History"} passport={passport} />
+                </ButtonGroup>
                   </Stack>
                 </CardBody>
                 <CardFooter
@@ -194,6 +199,7 @@ const MaintenanceCard = () => {
                         : formatDateToISO(parseInt(passport.expirationDate))
                     }
                   />
+                  
                 </CardFooter>
                 </Card>
               );
