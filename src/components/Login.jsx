@@ -4,12 +4,12 @@ import {
   Box,
   Center,
   Heading,
-  Text,
   Input,
   Button,
   ChakraProvider
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import Image from "../assets/images/LS.png"
 
 function AuraPassportPage() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -48,27 +48,33 @@ function AuraPassportPage() {
         justifyContent="center"
         alignItems="center"
         bg="blue.500"
+        minW={"100%"} backgroundImage={Image} 
+        backgroundSize="contain"
+        backgroundPosition="center"
+        backgroundRepeat="repeat"
+       
       >
         <Center flexDirection="column">
-          <Heading size="xl" color="white">
+          <Heading size="xl" color="#36454F" bg="#F5F5F5"  rounded={'lg'}>
             Welcome to Aura-Passport's
           </Heading>
-          <Text color="white" fontSize="xl" mt={4}>
-            Where your passport data is secure
-          </Text>
+          
           <Input
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
             size="lg"
             mt={8}
             width="300px"
+            fontStyle={"italic"}
             borderRadius="md"
-            color={"white"}
+            color="#FFFAFA"
+            bg="#8C92AC"
+            minW="425px"
           />
           {!isLoggedIn ? (
             <>
               <Button colorScheme="teal" size="lg" mt={4} onClick={handleConnect}>
-                Connect
+                Connect Wallet
               </Button>
             </>
           ) : (

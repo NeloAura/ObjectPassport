@@ -23,19 +23,17 @@ import CommentForm from "./PopOver/Comment";
 import History from "./PopOver/History";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
-
+import Image from "../assets/images/SPL.png"
 const { ethers } = require("ethers");
+
+const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const abi = ObjectPassportAbi.abi;
 
 const MaintenanceCard = () => {
   const theme = extendTheme({
     // Add your theme configurations here
   });
 
-  // Function to handle editing of owner's details
-  // const handleEditOwnerDetails = () => {
-  //   // Implement the logic to save the edited owner details
-  //   console.log("Owner details saved:", inputData);
-  // };
 
   const [passports, setPassports] = useState([]);
   const [filteredPassports, setFilteredPassporst] = useState([]);
@@ -45,8 +43,7 @@ const MaintenanceCard = () => {
   const [description, setDescription] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
 
-  const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
-  const abi = ObjectPassportAbi.abi;
+  
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -83,33 +80,43 @@ const MaintenanceCard = () => {
     };
 
     fetchPassports();
-  }, [abi, contractAddress, passports, userWalletAddress]);
+  }, [ passports, userWalletAddress]);
 
   const formatDateToISO = (timestamp) => {
     const parsedDate = fromUnixTime(timestamp);
     return format(parsedDate, "yyyy-MM-dd");
   };
 
+  const formatDateToISO2 = (timestamp) => {
+    const parsedDate = fromUnixTime(timestamp);
+    return format(parsedDate, "HH:mm:ss");
+  };
+
   return (
     <ChakraBaseProvider theme={theme}>
       <Flex>
         <VerticalNavigationBar />
-        <Box display="flex" flexDirection="row" minW={"100%"} bg="lightgrey">
+        <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
+        backgroundSize="contain"
+        backgroundPosition="center"
+        backgroundRepeat="repeat">
           {loading ? (
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
                 thickness="4px"
                 speed="0.65s"
                 emptyColor="gray.200"
-                color="blue.500"
+                color="red.500"
                 size="xl"
               />
             </Center>
           ) : filteredPassports.length === 0 ? (
             <Center flexGrow={1} alignItems="center" justifyContent="center">
-              <Text textAlign="center" color="blue.500" fontSize="24px" as="b">
+            <Box bg="white">
+              <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
                 No passport to perform Maintanance at the moment.
               </Text>
+              </Box>
             </Center>
           ) : (
             filteredPassports.map((passport) => {
@@ -128,25 +135,26 @@ const MaintenanceCard = () => {
                 ml="10px"
               >
                 <CardHeader
-                  bg="orange.500"
-                  color="white"
-                  textAlign="center"
-                  py={2}
+                  bg={passport.maintanancePerformed?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" 
                 >
-                  Maintenance Passport
+                 {passport.maintanancePerformed?"Maintanance Performed":"Pending Maintanance"}
                 </CardHeader>
                 <CardBody>
                   <p>
-                    <Badge colorScheme="orange">ID:</Badge>{" "}
-                    <Badge>{passport.id}</Badge>
+                    <Badge colorScheme="twitter">ID:</Badge>{" "}
+                    <Badge colorScheme="teal">{passport.id}</Badge>
                   </p>
                   <p>
-                    <Badge colorScheme="purple">Owner:</Badge>{" "}
-                    <Badge>{passport.owner}</Badge>
+                    <Badge colorScheme="twitter">Owner:</Badge>{" "}
+                    <Badge colorScheme="teal">{passport.owner}</Badge>
+                  </p>
+                  <p>
+                    <Badge colorScheme="facebook">Last Maintanance:</Badge>{" "}
+                    <Badge colorScheme="whatsapp">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
                   </p>
                   <Stack spacing={3} mt="5px">
                     <InputGroup size="sm">
-                      <InputLeftAddon children="name" bg="green.200" />
+                      <InputLeftAddon children="name" bg="#68bfff" />
                       <Input
                         value={name || passport.name}
                         onChange={(e) => setName(e.target.value)}
@@ -155,7 +163,7 @@ const MaintenanceCard = () => {
                     </InputGroup>
 
                     <InputGroup size="sm">
-                      <InputLeftAddon children="description" bg="blue.200" />
+                      <InputLeftAddon children="description" bg="#6895ff" />
                       <Input
                         value={description || passport.description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -163,7 +171,7 @@ const MaintenanceCard = () => {
                       />
                     </InputGroup>
                     <InputGroup size="sm">
-                      <InputLeftAddon children="expiration-date" bg="red.200" />
+                      <InputLeftAddon children="expiration-date" bg="#57a0d5" />
                       <Input
                         value={
                           expirationDate ||

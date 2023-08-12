@@ -13,7 +13,8 @@ import {
   PopoverCloseButton,
   Input,
   Spinner,
-  useToast, // Import useToast
+  useToast,
+  Flex 
 } from "@chakra-ui/react";
 import {
   PlusSquareIcon,
@@ -77,6 +78,7 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
       toast({
         title: `${formbutton} successful`,
         status: "success",
+        position:"top-right",
         duration: 5000,
         isClosable: true,
       });

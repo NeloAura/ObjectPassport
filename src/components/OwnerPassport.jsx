@@ -18,8 +18,11 @@ import VerticalNavigationBar from "./NavigationBar";
 import AssignPopoverForm from "./PopOver/AssignPopOver";
 import FieldForm from "./PopOver/Fields";
 import History from "./PopOver/History";
-
+import Image from "../assets/images/SPL.png"
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
+
+const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const abi = ObjectPassportAbi.abi;
 
 const { ethers } = require("ethers");
 const ObjectPassportCard = () => {
@@ -28,8 +31,7 @@ const ObjectPassportCard = () => {
   const [loading, setLoading] = useState(true);
   const [userWalletAddress, setUserWalletAddress] = useState("");
 
-  const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
-  const abi = ObjectPassportAbi.abi;
+ 
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -61,7 +63,7 @@ const ObjectPassportCard = () => {
     };
 
     fetchPassports();
-  }, [abi, contractAddress, passports, userWalletAddress ]);
+  }, [ passports, userWalletAddress ]);
 
   
 
@@ -71,23 +73,28 @@ const ObjectPassportCard = () => {
     <ChakraBaseProvider theme={theme}>
       <Flex>
         <VerticalNavigationBar />
-        <Box display="flex" flexDirection="row" minW={"100%"} bg="lightgrey">
+        <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
+        backgroundSize="contain"
+        backgroundPosition="center"
+        backgroundRepeat="repeat">
         {loading ? ( 
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
                 thickness='4px'
                 speed='0.65s'
                 emptyColor='gray.200'
-                color='blue.500'
+                color='red.500'
                 size='xl'
               />
             </Center>
           ) : (
             (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
-                <Text textAlign="center" color="blue.500" fontSize="24px" as="b">
+              <Box bg="white">
+                <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
                   No passport to show at the moment. Click the + button to add one.
                 </Text>
+                </Box>
               </Center>
             ) : (
               filteredPassports.map((passport) => (
@@ -118,15 +125,15 @@ const ObjectPassportCard = () => {
                 </ButtonGroup>
                 </CardHeader>
                 <CardBody>
-                  <p><Badge>Owner:</Badge> {passport.owner}</p>
-                  <p><Badge>Maintenance Party:</Badge>{passport.maintenanceParty}</p>
-                  <p><Badge>Certifying Party:</Badge> {passport.certifyingParty}</p>
-                  <p><Badge>Description:</Badge> {passport.description}</p>
+                  <p><Badge colorScheme="teal">Owner:</Badge> {passport.owner}</p>
+                  <p><Badge colorScheme="messenger">Maintenance Party:</Badge>{passport.maintenanceParty}</p>
+                  <p><Badge colorScheme="twitter">Certifying Party:</Badge> {passport.certifyingParty}</p>
+                  <p><Badge colorScheme="purple">Description:</Badge> {passport.description}</p>
                   <p>
-                  <Badge>Maintenance Performed:</Badge>{" "}
+                  <Badge colorScheme="orange">Maintenance Performed:</Badge>{" "}
                     {passport.maintenancePerformed ? "Yes" : "No"}
                   </p>
-                  <p><Badge>Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
+                  <p ><Badge colorScheme="whatsapp">Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
                   <ButtonGroup display="flex" justifyContent="center" mt={5} >
                   <History name={"History"} passport={passport} />
                 </ButtonGroup>

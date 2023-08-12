@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import VerticalNavigationBar from './NavigationBar';
 import { Flex ,Box,Badge,Center, Card, CardHeader, CardBody, CardFooter ,Button ,ButtonGroup, Text, Spinner,ChakraBaseProvider, extendTheme} from '@chakra-ui/react';
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
+import Image from "../assets/images/SPL.png"
+import { format, fromUnixTime } from "date-fns"
+
 const { ethers } = require("ethers");
+const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const abi = ObjectPassportAbi.abi;
 
 const CertifierCard = () => {
   
@@ -12,8 +17,7 @@ const CertifierCard = () => {
   const [userWalletAddress, setUserWalletAddress] = useState("");
 
   
-  const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
-  const abi = ObjectPassportAbi.abi;
+
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -44,11 +48,22 @@ const CertifierCard = () => {
     };
 
     fetchPassports();
-  }, [abi, contractAddress, passports, userWalletAddress ]);
+  }, [passports, userWalletAddress ]);
   
   const theme = extendTheme({
     
   });
+
+  const formatDateToISO = (timestamp) => {
+    const parsedDate = fromUnixTime(timestamp);
+    return format(parsedDate, "yyyy-MM-dd");
+  };
+
+  const formatDateToISO2 = (timestamp) => {
+    const parsedDate = fromUnixTime(timestamp);
+    return format(parsedDate, "HH:mm:ss");
+  };
+
 
 
  
@@ -86,38 +101,51 @@ const CertifierCard = () => {
     
     <Flex>
      <VerticalNavigationBar/>
-     <Box display="flex" flexDirection="row" minW={"100%"} bg="lightgrey">
+     <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
+        backgroundSize="contain"
+        backgroundPosition="center"
+        backgroundRepeat="repeat">
         {loading ? ( 
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
                 thickness='4px'
                 speed='0.65s'
                 emptyColor='gray.200'
-                color='blue.500'
+                color='red.500'
                 size='xl'
               />
             </Center>
           ) : (
             (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
-                <Text textAlign="center" color="blue.500" fontSize="24px" as="b">
+              <Box bg="white">
+                <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
                   No passport to Certify at the moment.
                 </Text>
+                </Box>
               </Center>
             ) : (
-        passports.map((passport) => (
+              filteredPassports.map((passport) => (
           <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="400px" maxH="400px" mb={4} mt="10px" ml="10px">
-            <CardHeader bg="green.500" color="white" textAlign="center" py={2}>
-              Certifier Passport
+            <CardHeader bg={passport.certified?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" >
+            {passport.certified?"Certified":"Pending"}
             </CardHeader>
             <CardBody>
             <p><Badge colorScheme="orange">ID:</Badge> <Badge>{passport.id}</Badge></p>
-            <p><Badge>Name:</Badge>{passport.name}</p>
-              <p><Badge>Owner:</Badge> {passport.owner}</p>
-                  <p><Badge>Maintenance Party:</Badge>{passport.maintenanceParty}</p>
-                  <p><Badge>Certifying Party:</Badge> {passport.certifyingParty}</p>
-                  <p><Badge>Description:</Badge> {passport.description}</p>
-                  <p><Badge>Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
+            <p><Badge colorScheme="twitter">Name:</Badge>{passport.name}</p>
+              <p><Badge colorScheme="twitter">Owner:</Badge> {passport.owner}</p>
+                  <p><Badge colorScheme="facebook">Maintenance Party:</Badge>{passport.maintenanceParty}</p>
+                  <p>
+                    <Badge colorScheme="purple">Last Maintanance:</Badge>{" "}
+                    <Badge>{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
+                  </p>
+                  <p>
+                    <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}
+                    <Badge>{formatDateToISO(parseInt(passport.expirationDate))}</Badge>
+                  </p>
+                  
+                  <p><Badge colorScheme="blue">Description:</Badge> {passport.description}</p>
+                  <p><Badge colorScheme="green">Certified:</Badge> {passport.certified ? "Yes" : "No"}</p>
             </CardBody>
             <CardFooter bg="gray.100" textAlign="center" py={2} justifyContent={"center"}>
               {/* Button to mark object as certified */}

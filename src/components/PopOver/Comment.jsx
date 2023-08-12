@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -12,9 +12,12 @@ import {
   PopoverContent,
   PopoverCloseButton,
   Input,
+  Spinner,
+  useToast, 
+  Flex
 } from "@chakra-ui/react";
 import FocusLock from "react-focus-lock";
-import { parse  } from "date-fns";
+import { parse } from "date-fns";
 import ObjectPassportAbi from "../../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
@@ -27,12 +30,10 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-
-
-const CommentForm = ({button ,color , id ,name, description,expirationDate}) => {
+const CommentForm = ({ button, color, id, name, description, expirationDate }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
- 
+
   return (
     <>
       <Popover
@@ -44,17 +45,22 @@ const CommentForm = ({button ,color , id ,name, description,expirationDate}) => 
         closeOnBlur={false}
       >
         <PopoverTrigger>
-         
-            <Button  colorScheme={color} variant='solid'>
-             {button}
-            </Button>
-         
+          <Button colorScheme={color} variant="solid">
+            {button}
+          </Button>
         </PopoverTrigger>
         <PopoverContent p={5}>
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow />
             <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} id={id} name={name} description={description} expirationDate={expirationDate} />
+            <Form
+              firstFieldRef={firstFieldRef}
+              onCancel={onClose}
+              id={id}
+              name={name}
+              description={description}
+              expirationDate={expirationDate}
+            />
           </FocusLock>
         </PopoverContent>
       </Popover>
@@ -62,13 +68,15 @@ const CommentForm = ({button ,color , id ,name, description,expirationDate}) => 
   );
 };
 
-const Form = ({ firstFieldRef, onCancel , id ,name, description,expirationDate}) => {
+const Form = ({ firstFieldRef, onCancel, id, name, description, expirationDate }) => {
   const [comment, setComment] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
   const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
   const abi = ObjectPassportAbi.abi;
+  const toast = useToast(); // Initialize the toast
 
   const formatDateToTimestamp = (dateString) => {
-    const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+    const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
     return parsedDate.getTime() / 1000; // Convert to Unix timestamp (seconds since epoch)
   };
 
@@ -76,26 +84,34 @@ const Form = ({ firstFieldRef, onCancel , id ,name, description,expirationDate})
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-   const EditFunction = async () => {
+  const EditFunction = async () => {
     try {
-      
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
+      setIsWaiting(true); // Set waiting state
       const assignMaintenanceParty = await contract.performMaintenance(
         id,
         comment,
         name,
         description,
-        formatDateToTimestamp(expirationDate),
+        formatDateToTimestamp(expirationDate)
       );
       await assignMaintenanceParty.wait();
       console.log("Maintenance party assigned successfully!");
-      // You can handle the success message and any other necessary actions here
+      setIsWaiting(false); // Reset waiting state
+
+      // Show success toast
+      toast({
+        title: "Edit successful",
+        status: "success",
+        position:"top-right",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.error("Error assigning maintenance party:", error);
-      // Handle error, e.g., show an error message to the user
+      console.error("Error editing:", error);
     } finally {
       onCancel(); // Close the popover
     }
@@ -107,25 +123,32 @@ const Form = ({ firstFieldRef, onCancel , id ,name, description,expirationDate})
 
   return (
     <Stack spacing={4}>
+    {!isWaiting && (
+      <>
       <TextInput
         label="Comment"
         id="comment"
-        value={comment} 
-        onChange={(event) => setComment(event.target.value)} 
+        value={comment}
+        onChange={(event) => setComment(event.target.value)}
         ref={firstFieldRef}
       />
       <ButtonGroup display="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button  colorScheme="teal" onCancel={onCancel} onClick={()=>{handleEditClick()}}>
+        <Button colorScheme="teal" onClick={handleEditClick}>
           Submit
         </Button>
       </ButtonGroup>
+      </>
+      )}
+      {isWaiting && (
+        <Flex align="center" justify="center" p={4}>
+          <Spinner color="blue.500" />
+        </Flex>
+      )}
     </Stack>
   );
 };
-
-
 
 export default CommentForm;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IconButton,
   VStack,
@@ -15,6 +15,9 @@ import {
   PopoverContent,
   PopoverCloseButton,
   Input,
+  Spinner,
+  useToast, 
+  Flex
 } from "@chakra-ui/react";
 import {
   StarIcon,
@@ -29,9 +32,7 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 
 const { ethers } = require("ethers");
 const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
-const abi = ObjectPassportAbi.abi; 
-
-
+const abi = ObjectPassportAbi.abi;
 
 async function requestAccount() {
   await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -47,16 +48,31 @@ const TextInput = React.forwardRef((props, ref) => {
 });
 
 const Form = ({ firstFieldRef, onCancel }) => {
-  const createPassport = async (name, description) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
+  const toast = useToast(); // Initialize the toast
+
+  const createPassport = async () => {
     try {
-      await requestAccount()
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
+      setIsWaiting(true); // Set waiting state
       const create = await contract.createPassport(name, description);
       await create.wait();
       console.log("Passport created successfully!");
-      // You can handle the success message and any other necessary actions here
+      setIsWaiting(false); // Reset waiting state
+
+      // Show success toast
+      toast({
+        title: "Passport created successfully",
+        status: "success",
+        position:"top-right",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
       console.error("Error creating passport:", error);
       // Handle error, e.g., show an error message to the user
@@ -66,20 +82,26 @@ const Form = ({ firstFieldRef, onCancel }) => {
   };
 
   const handleCreateClick = () => {
-    const name = document.getElementById("name").value;
-    const description = document.getElementById("description").value;
-    createPassport(name, description);
+    createPassport();
   };
 
   return (
     <Stack spacing={4}>
+    {!isWaiting && (
+      <>
       <TextInput
         label="Passport name"
         id="name"
         ref={firstFieldRef}
-        defaultValue=""
+        value={name}
+        onChange={(event) => setName(event.target.value)}
       />
-      <TextInput label="Description" id="description" defaultValue="" />
+      <TextInput
+        label="Description"
+        id="description"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+      />
       <ButtonGroup display="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>
           Cancel
@@ -88,6 +110,14 @@ const Form = ({ firstFieldRef, onCancel }) => {
           Create
         </Button>
       </ButtonGroup>
+      </>
+    )}
+
+      {isWaiting && (
+        <Flex align="center" justify="center" p={4}>
+          <Spinner color="blue.500" />
+        </Flex>
+      )}
     </Stack>
   );
 };
@@ -107,13 +137,11 @@ const PopoverForm = () => {
         closeOnBlur={false}
       >
         <PopoverTrigger>
-         
-            <IconButton
-              icon={<PlusSquareIcon />}
-              colorScheme="teal"
-              aria-label="Add"
-            />
-         
+          <IconButton
+            icon={<PlusSquareIcon />}
+            colorScheme="gray"
+            aria-label="Add"
+          />
         </PopoverTrigger>
         <PopoverContent p={5}>
           <FocusLock returnFocus persistentFocus={false}>
@@ -126,30 +154,30 @@ const PopoverForm = () => {
     </>
   );
 };
+
 const VerticalNavigationBar = () => {
-
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
+  const gradientColors = [ "#99ccdf", "#029ec4" , "#033f63"];
+  const gradient = `linear-gradient(to bottom, ${gradientColors.join(", ")})`;
   return (
     <VStack
       spacing={4}
       p={4}
-      bg="gray.400"
+      bg={gradient}
       position="static"
       left={0}
       top={0}
       h="100vh"
       alignItems="flex-start"
-     
     >
-     <Tooltip
-            hasArrow
-            label="Add Passport"
-            bg="purple.300"
-            color="black"
-            placement="right"
-          >
-      {PopoverForm()}
+      <Tooltip
+        hasArrow
+        label="Add Passport"
+        bg="purple.300"
+        color="black"
+        placement="right"
+      >
+        {PopoverForm()}
       </Tooltip>
 
       <Tooltip
@@ -159,10 +187,14 @@ const VerticalNavigationBar = () => {
         color="black"
         placement="right"
       >
-        <IconButton icon={<StarIcon />} colorScheme="blue" aria-label="Home" onClick={() => {
-    navigate('/o'); 
-  }
-}/>
+        <IconButton
+          icon={<StarIcon />}
+          colorScheme="facebook"
+          aria-label="Home"
+          onClick={() => {
+            navigate('/o');
+          }}
+        />
       </Tooltip>
       <Tooltip
         hasArrow
@@ -176,7 +208,8 @@ const VerticalNavigationBar = () => {
           colorScheme="orange"
           aria-label="Maintanance"
           onClick={() => {
-    navigate('/m');}}
+            navigate('/m');
+          }}
         />
       </Tooltip>
       <Tooltip
@@ -191,7 +224,8 @@ const VerticalNavigationBar = () => {
           colorScheme="green"
           aria-label="Certify"
           onClick={() => {
-    navigate('/c');}}
+            navigate('/c');
+          }}
         />
       </Tooltip>
       <Tooltip
@@ -207,7 +241,8 @@ const VerticalNavigationBar = () => {
           colorScheme="red"
           aria-label="LogOut"
           onClick={() => {
-    navigate('/');}}
+            navigate('/', { replace: true });
+          }}
         />
       </Tooltip>
     </VStack>

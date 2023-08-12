@@ -26,7 +26,7 @@ import { format, fromUnixTime } from "date-fns"; // Importing date-fns functions
 
 const formatDateToISO = (timestamp) => {
   const parsedDate = fromUnixTime(timestamp);
-  return format(parsedDate, "yyyy-MM-dd");
+  return format(parsedDate,  "yyyy-MM-dd HH:mm:ss");
 };
 
 const HistoryContent = ({ passport }) => {
@@ -49,7 +49,7 @@ const HistoryContent = ({ passport }) => {
   const handleDownloadClick = () => {
     // Convert table data to CSV format
     const csvData = [
-      ["Maintenance Address", "Date", "Comments"],
+      ["Maintenance Address", "Date & Time", "Comments"],
       ...tableData.map((entry) => [entry.address, entry.timestamp, entry.comments]),
     ].map((row) => row.join(","));
 
@@ -67,7 +67,7 @@ const HistoryContent = ({ passport }) => {
         <Thead>
           <Tr>
             <Th>Maintenance Address</Th>
-            <Th>Date</Th>
+            <Th>Date & Time</Th>
             <Th>Comments</Th>
           </Tr>
         </Thead>
