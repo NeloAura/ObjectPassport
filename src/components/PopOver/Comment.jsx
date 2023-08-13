@@ -14,7 +14,7 @@ import {
   Input,
   Spinner,
   useToast, 
-  Flex
+  Flex,
 } from "@chakra-ui/react";
 import FocusLock from "react-focus-lock";
 import { parse } from "date-fns";
@@ -30,7 +30,7 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const CommentForm = ({ button, color, id, name, description, expirationDate }) => {
+const CommentForm = ({ button, color,checker, id, name, description, expirationDate }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
 
@@ -45,9 +45,11 @@ const CommentForm = ({ button, color, id, name, description, expirationDate }) =
         closeOnBlur={false}
       >
         <PopoverTrigger>
-          <Button colorScheme={color} variant="solid">
+       
+          <Button colorScheme={color} variant="solid" isDisabled={!checker}>
             {button}
-          </Button>
+          </Button> 
+       
         </PopoverTrigger>
         <PopoverContent p={5}>
           <FocusLock returnFocus persistentFocus={false}>

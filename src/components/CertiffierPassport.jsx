@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import VerticalNavigationBar from './NavigationBar';
-import { Flex ,Box,Badge,Center, Card, CardHeader, CardBody, CardFooter ,Button ,ButtonGroup, Text, Spinner,ChakraBaseProvider, extendTheme} from '@chakra-ui/react';
+import { useToast, Flex ,Box,Badge,Center, Card, CardHeader, CardBody, CardFooter ,Button ,ButtonGroup, Text, Spinner,ChakraBaseProvider, extendTheme} from '@chakra-ui/react';
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
+import { SearchInput } from '@saas-ui/react'
 import Image from "../assets/images/SPL.png"
 import { format, fromUnixTime } from "date-fns"
 
@@ -12,11 +13,12 @@ const abi = ObjectPassportAbi.abi;
 const CertifierCard = () => {
   
   const [passports, setPassports] = useState([]);
+  const toast = useToast(); // Initialize the toast
   const [filteredPassports, setFilteredPassporst] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userWalletAddress, setUserWalletAddress] = useState("");
-
-  
+  const [value, setValue] = React.useState('')
+  const [show, setShow] = React.useState(false)
 
 
   useEffect(() => {
@@ -39,7 +41,9 @@ const CertifierCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
-        setFilteredPassporst(passports.filter((passport) => passport.certifyingParty.toLowerCase() === userWalletAddress.toLowerCase()))
+        setFilteredPassporst(passports.filter((passport) => passport.certifyingParty.toLowerCase() === userWalletAddress.toLowerCase()&&
+        passport.owner.toLowerCase().includes(value.toLowerCase()) &&
+        (show || passport.certified === show)));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching passports:", error);
@@ -48,7 +52,7 @@ const CertifierCard = () => {
     };
 
     fetchPassports();
-  }, [passports, userWalletAddress ]);
+  }, [passports, userWalletAddress , value ,show ]);
   
   const theme = extendTheme({
     
@@ -63,6 +67,7 @@ const CertifierCard = () => {
     const parsedDate = fromUnixTime(timestamp);
     return format(parsedDate, "HH:mm:ss");
   };
+  const handleClick = () => setShow(!show)
 
 
 
@@ -74,18 +79,29 @@ const CertifierCard = () => {
 
    const Certify = async (id) => {
     try {
+      
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+      setLoading(true)
       const contract = new ethers.Contract(contractAddress, abi, signer);
       const certify = await contract.certifyObject(
         id
       );
       await certify.wait();
+      setLoading(false);
+      toast({
+        title: "Certification successfull",
+        status: "success",
+        position:"top-right",
+        duration: 5000,
+        isClosable: true,
+      });
       console.log("Certification successfull!");
       // You can handle the success message and any other necessary actions here
     } catch (error) {
       console.error("Error Certifying:", error);
+      setLoading(false);
       // Handle error, e.g., show an error message to the user
     } finally {
       
@@ -98,7 +114,15 @@ const CertifierCard = () => {
 
   return (
     <ChakraBaseProvider theme={theme}>
-    
+     <SearchInput
+      placeholder="Search by Owner Address"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onReset={() => setValue('')}
+      rightElement=<Button colorScheme={show?"yellow":"whatsapp"} h='2.00rem' minW="unset"  size='lg' onClick={handleClick} mr={"175px"}>
+          <Text>{show ? 'Pending Passports ' : ' All Passports'}</Text>
+        </Button>
+    />
     <Flex>
      <VerticalNavigationBar/>
      <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
@@ -137,7 +161,7 @@ const CertifierCard = () => {
                   <p><Badge colorScheme="facebook">Maintenance Party:</Badge>{passport.maintenanceParty}</p>
                   <p>
                     <Badge colorScheme="purple">Last Maintanance:</Badge>{" "}
-                    <Badge>{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
+                    <Badge colorScheme="yellow">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))==="1969-12-31"?("No Maintanance Performed yet"):formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
                   </p>
                   <p>
                     <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}

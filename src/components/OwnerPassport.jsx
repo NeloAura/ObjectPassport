@@ -19,6 +19,7 @@ import AssignPopoverForm from "./PopOver/AssignPopOver";
 import FieldForm from "./PopOver/Fields";
 import History from "./PopOver/History";
 import Image from "../assets/images/SPL.png"
+import { SearchInput } from '@saas-ui/react'
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
@@ -30,7 +31,7 @@ const ObjectPassportCard = () => {
   const [filteredPassports, setFilteredPassporst] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userWalletAddress, setUserWalletAddress] = useState("");
-
+  const [value, setValue] = React.useState('')
  
 
   useEffect(() => {
@@ -53,7 +54,10 @@ const ObjectPassportCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
-        setFilteredPassporst(passports.filter((passport) => passport.owner.toLowerCase() === userWalletAddress.toLowerCase()))
+        setFilteredPassporst(passports.filter((passport) => 
+        passport.owner.toLowerCase() === userWalletAddress.toLowerCase() &&
+        passport.name.toLowerCase().includes(value.toLowerCase())
+      ));
         console.log(passports)
         setLoading(false);
       } catch (error) {
@@ -63,7 +67,7 @@ const ObjectPassportCard = () => {
     };
 
     fetchPassports();
-  }, [ passports, userWalletAddress ]);
+  }, [ passports, userWalletAddress , value ]);
 
   
 
@@ -71,6 +75,13 @@ const ObjectPassportCard = () => {
 
   return (
     <ChakraBaseProvider theme={theme}>
+    
+    <SearchInput
+      placeholder="Search by Passport Name"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onReset={() => setValue('')}
+    />
       <Flex>
         <VerticalNavigationBar />
         <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
