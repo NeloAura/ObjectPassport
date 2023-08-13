@@ -167,7 +167,8 @@ const VerticalNavigationBar = () => {
       position="static"
       left={0}
       top={0}
-      h="100vh"
+      minH={"100vh"}
+      h="auto"
       alignItems="flex-start"
     >
       <Tooltip

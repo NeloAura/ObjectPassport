@@ -17,7 +17,9 @@ import {
   Text,
   Spinner,
   Badge,
-  Button
+  Button,
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import CommentForm from "./PopOver/Comment";
@@ -45,7 +47,7 @@ const MaintenanceCard = () => {
   const [description, setDescription] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [value, setValue] = React.useState('')
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState(true);
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -116,9 +118,12 @@ const MaintenanceCard = () => {
         backgroundSize="contain"
         backgroundPosition="center"
         backgroundRepeat="repeat">
+        <Wrap spacing={4} justify="center" >
           {loading ? (
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
+                mt="350px"
+                ml="750px"
                 thickness="4px"
                 speed="0.65s"
                 emptyColor="gray.200"
@@ -129,7 +134,7 @@ const MaintenanceCard = () => {
           ) : filteredPassports.length === 0 ? (
             <Center flexGrow={1} alignItems="center" justifyContent="center">
             <Box bg="white">
-              <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
+              <Text textAlign="center" color="#C40234" fontSize="24px" as="b" ml="400px">
                 No passport to perform Maintanance at the moment.
               </Text>
               </Box>
@@ -140,20 +145,14 @@ const MaintenanceCard = () => {
               const editableFields = passport.editableFields.split(", ");
 
               return(
+                <WrapItem key={passport.id}>
               <Card
-                key={passport.id}
-                boxShadow="md"
-                borderRadius="md"
-                maxW="400px"
-                maxH="400px"
-                mb={4}
-                mt="10px"
-                ml="10px"
+               key={passport.id} boxShadow="md" borderRadius="md" w="450px" h="550px" mb={4} mt="10px" ml={"10px"}
               >
                 <CardHeader
-                  bg={!passport.maintanancePerformed?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" 
+                  bg="#01aece" color="white" textAlign="center" py={2} as="b" 
                 >
-                 {!passport.maintanancePerformed?"Maintanance Performed":"Pending Maintanance"}
+                 Maintanance Card
                 </CardHeader>
                 <CardBody>
                   <p>
@@ -166,7 +165,7 @@ const MaintenanceCard = () => {
                   </p>
                   <p>
                     <Badge colorScheme="facebook">Last Maintanance:</Badge>{" "}
-                    <Badge colorScheme="whatsapp">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
+                    <Badge colorScheme="whatsapp">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))==="1969-12-31"?("No Maintanance Performed yet"):formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
                   </p>
                   <Stack spacing={3} mt="5px">
                     <InputGroup size="sm">
@@ -230,9 +229,11 @@ const MaintenanceCard = () => {
                    }
                 </CardFooter>
                 </Card>
+                </WrapItem>
               );
             })
           )}
+          </Wrap>
         </Box>
       </Flex>
     </ChakraBaseProvider>

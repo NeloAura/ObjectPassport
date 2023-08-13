@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
-  Center,
+  Flex,
   Heading,
   Input,
+  ButtonGroup,
   Button,
   ChakraProvider
+
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import Explained from './PopOver/Explained';
+import Abus from './PopOver/Abus';
 import Image from "../assets/images/LS.png"
 
 function AuraPassportPage() {
@@ -43,18 +47,26 @@ function AuraPassportPage() {
       <Box
         height="100vh"
         width="100vw"
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
         bg="blue.500"
-        minW={"100%"} backgroundImage={Image} 
+        backgroundImage={Image}
         backgroundSize="contain"
         backgroundPosition="center"
         backgroundRepeat="repeat"
-       
+        position="relative" // Set the parent container to relative positioning
       >
-        <Center flexDirection="column">
+      <ButtonGroup mt="25px" ml="100px">
+        <Explained/>
+        <Abus/>
+      </ButtonGroup>
+      
+        <Flex
+          height="100vh"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          position="relative" // Set the child container to relative positioning
+        >
+       
           <Heading size="xl" color="#36454F" bg="#F5F5F5"  rounded={'lg'}>
             Welcome to Aura-Passport's
           </Heading>
@@ -88,7 +100,8 @@ function AuraPassportPage() {
               </Button>
             </motion.div>
           )}
-        </Center>
+        
+        </Flex>
       </Box>
     </ChakraProvider>
   );
