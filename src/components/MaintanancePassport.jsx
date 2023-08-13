@@ -17,10 +17,12 @@ import {
   Text,
   Spinner,
   Badge,
+  Button
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import CommentForm from "./PopOver/Comment";
 import History from "./PopOver/History";
+import { SearchInput } from '@saas-ui/react'
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
 import Image from "../assets/images/SPL.png"
@@ -42,8 +44,8 @@ const MaintenanceCard = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-
-  
+  const [value, setValue] = React.useState('')
+  const [show, setShow] = React.useState(false)
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -69,7 +71,9 @@ const MaintenanceCard = () => {
           passports.filter(
             (passport) =>
               passport.maintenanceParty.toLowerCase() ===
-              userWalletAddress.toLowerCase()
+              userWalletAddress.toLowerCase()&&
+              passport.owner.toLowerCase().includes(value.toLowerCase()) &&
+              (show || passport.maintenancePerformed === show)
           )
         );
         setLoading(false);
@@ -80,7 +84,7 @@ const MaintenanceCard = () => {
     };
 
     fetchPassports();
-  }, [ passports, userWalletAddress]);
+  }, [ passports, userWalletAddress , value , show]);
 
   const formatDateToISO = (timestamp) => {
     const parsedDate = fromUnixTime(timestamp);
@@ -92,8 +96,20 @@ const MaintenanceCard = () => {
     return format(parsedDate, "HH:mm:ss");
   };
 
+  const handleClick = () => setShow(!show)
+
   return (
     <ChakraBaseProvider theme={theme}>
+     <SearchInput
+      placeholder="Search by Owner Address"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onReset={() => setValue('')}
+      rightElement=<Button colorScheme={show?"yellow":"whatsapp"} h='2.00rem' minW="unset"  size='lg' onClick={handleClick} mr={"175px"}>
+          <Text>{show ? 'Pending Passports ' : ' All Passports'}</Text>
+        </Button>
+    />
+    
       <Flex>
         <VerticalNavigationBar />
         <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
@@ -135,9 +151,9 @@ const MaintenanceCard = () => {
                 ml="10px"
               >
                 <CardHeader
-                  bg={passport.maintanancePerformed?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" 
+                  bg={!passport.maintanancePerformed?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" 
                 >
-                 {passport.maintanancePerformed?"Maintanance Performed":"Pending Maintanance"}
+                 {!passport.maintanancePerformed?"Maintanance Performed":"Pending Maintanance"}
                 </CardHeader>
                 <CardBody>
                   <p>
@@ -156,7 +172,7 @@ const MaintenanceCard = () => {
                     <InputGroup size="sm">
                       <InputLeftAddon children="name" bg="#68bfff" />
                       <Input
-                        value={name || passport.name}
+                        defaultValue={passport.name}
                         onChange={(e) => setName(e.target.value)}
                         isDisabled={!editableFields.includes("name")}
                       />
@@ -165,16 +181,16 @@ const MaintenanceCard = () => {
                     <InputGroup size="sm">
                       <InputLeftAddon children="description" bg="#6895ff" />
                       <Input
-                        value={description || passport.description}
+                        defaultValue={passport.description}
                         onChange={(e) => setDescription(e.target.value)}
                         isDisabled={!editableFields.includes("description")}
                       />
                     </InputGroup>
+                    {passport.certified &&
                     <InputGroup size="sm">
                       <InputLeftAddon children="expiration-date" bg="#57a0d5" />
                       <Input
-                        value={
-                          expirationDate ||
+                        defaultValue={
                           formatDateToISO(parseInt(passport.expirationDate))
                         }
                         type="date"
@@ -182,17 +198,20 @@ const MaintenanceCard = () => {
                         isDisabled={!editableFields.includes("expirationDate")}
                       />
                     </InputGroup>
+                    }
                     <ButtonGroup display="flex" justifyContent="center" mt={5} >
                   <History name={"History"} passport={passport} />
+                 
                 </ButtonGroup>
                   </Stack>
                 </CardBody>
                 <CardFooter
-                  bg="gray.100"
+                  bg={passport.certified?"gray.100":"orange.300"}
                   textAlign="center"
                   py={2}
                   justifyContent="center"
                 >
+                   {!passport.certified ?(<Text as="b">Passport Must be Certified in Order to Perform Maintanance</Text>):
                   <CommentForm
                     color={"green"}
                     button={"Save"}
@@ -206,8 +225,9 @@ const MaintenanceCard = () => {
                         ? expirationDate
                         : formatDateToISO(parseInt(passport.expirationDate))
                     }
+                    checker={passport.certified}
                   />
-                  
+                   }
                 </CardFooter>
                 </Card>
               );
