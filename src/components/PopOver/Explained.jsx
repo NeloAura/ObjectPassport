@@ -10,10 +10,14 @@ import {
   Button,
   useDisclosure,
   Text,
+  ChakraProvider, CSSReset, Box, Container
 } from "@chakra-ui/react";
+
+import Stepper from './Stepper';
 
 function Explained() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const steps = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
 
   return (
     <>
@@ -34,9 +38,14 @@ function Explained() {
           <ModalHeader>How to Work with The Passport?</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text fontWeight="bold" mb="1rem">
-              Coming Soon 
-            </Text>
+          <ChakraProvider>
+      <CSSReset />
+      <Container maxW="container.sm" py={8}>
+        <Box borderWidth="1px" borderRadius="lg" p={4}>
+          <Stepper steps={steps} />
+        </Box>
+      </Container>
+    </ChakraProvider>
           </ModalBody>
 
           <ModalFooter>
