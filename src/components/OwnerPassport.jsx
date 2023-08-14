@@ -13,6 +13,8 @@ import {
   extendTheme,
   Badge,
   Spinner,
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react";
 import VerticalNavigationBar from "./NavigationBar";
 import AssignPopoverForm from "./PopOver/AssignPopOver";
@@ -88,9 +90,12 @@ const ObjectPassportCard = () => {
         backgroundSize="contain"
         backgroundPosition="center"
         backgroundRepeat="repeat">
+        <Wrap spacing={4} justify="center" >
         {loading ? ( 
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
+                mt="350px"
+                ml="750px"
                 thickness='4px'
                 speed='0.65s'
                 emptyColor='gray.200'
@@ -102,23 +107,16 @@ const ObjectPassportCard = () => {
             (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Box bg="white">
-                <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
+                <Text textAlign="center" color="#C40234" fontSize="24px" as="b" ml="200px">
                   No passport to show at the moment. Click the + button to add one.
                 </Text>
                 </Box>
               </Center>
             ) : (
               filteredPassports.map((passport) => (
+                <WrapItem key={passport.id}>
               <Card
-                key={passport.id}
-                boxShadow="md"
-                borderRadius="md"
-                maxW="300px"
-                maxH="500px"
-                mb={4}
-                mt="10px"
-                mr={3}
-                ml={3}
+                key={passport.id} boxShadow="md" borderRadius="md" w="450px" h="550px" mb={4} mt="10px" ml={"10px"}
               >
                 <CardHeader
                   bg="blue.500"
@@ -172,8 +170,10 @@ const ObjectPassportCard = () => {
                   </ButtonGroup>
                 </CardFooter>
               </Card>
+              </WrapItem>
             ))
           ))}
+          </Wrap>
         </Box>
       </Flex>
     </ChakraBaseProvider>

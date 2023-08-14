@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import VerticalNavigationBar from './NavigationBar';
-import { useToast, Flex ,Box,Badge,Center, Card, CardHeader, CardBody, CardFooter ,Button ,ButtonGroup, Text, Spinner,ChakraBaseProvider, extendTheme} from '@chakra-ui/react';
+import { useToast, Flex ,Box,Badge,Center, Card, CardHeader, CardBody, CardFooter ,Button ,ButtonGroup, Text, Spinner,ChakraBaseProvider,Wrap,WrapItem, extendTheme} from '@chakra-ui/react';
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { SearchInput } from '@saas-ui/react'
 import Image from "../assets/images/SPL.png"
@@ -16,9 +16,10 @@ const CertifierCard = () => {
   const toast = useToast(); // Initialize the toast
   const [filteredPassports, setFilteredPassporst] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [waiting, setWaiting] = useState(false);
   const [userWalletAddress, setUserWalletAddress] = useState("");
   const [value, setValue] = React.useState('')
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState(true)
 
 
   useEffect(() => {
@@ -83,13 +84,13 @@ const CertifierCard = () => {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      setLoading(true)
+      setWaiting(true)
       const contract = new ethers.Contract(contractAddress, abi, signer);
       const certify = await contract.certifyObject(
         id
       );
       await certify.wait();
-      setLoading(false);
+      
       toast({
         title: "Certification successfull",
         status: "success",
@@ -101,10 +102,10 @@ const CertifierCard = () => {
       // You can handle the success message and any other necessary actions here
     } catch (error) {
       console.error("Error Certifying:", error);
-      setLoading(false);
+      
       // Handle error, e.g., show an error message to the user
     } finally {
-      
+      setWaiting(false);
     }
   };
 
@@ -125,13 +126,22 @@ const CertifierCard = () => {
     />
     <Flex>
      <VerticalNavigationBar/>
-     <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
-        backgroundSize="contain"
-        backgroundPosition="center"
-        backgroundRepeat="repeat">
-        {loading ? ( 
+     <Box
+          display="flex"
+          flexDirection="row"
+          minW={"100%"}
+          bg="#6CB4EE"
+          backgroundImage={Image}
+          backgroundSize="contain"
+          backgroundPosition="center"
+          backgroundRepeat="repeat"
+        >
+     <Wrap spacing={4} justify="center" >
+        {loading || waiting ? ( 
             <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Spinner
+                mt="350px"
+                ml="750px"
                 thickness='4px'
                 speed='0.65s'
                 emptyColor='gray.200'
@@ -143,14 +153,16 @@ const CertifierCard = () => {
             (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
               <Box bg="white">
-                <Text textAlign="center" color="#C40234" fontSize="24px" as="b">
+                <Text textAlign="center" color="#C40234" fontSize="24px" as="b" 
+                ml="500px">
                   No passport to Certify at the moment.
                 </Text>
                 </Box>
               </Center>
             ) : (
               filteredPassports.map((passport) => (
-          <Card key={passport.id} boxShadow="md" borderRadius="md" maxW="400px" maxH="400px" mb={4} mt="10px" ml="10px">
+                <WrapItem key={passport.id}>
+          <Card key={passport.id} boxShadow="md" borderRadius="md" w="450px" h="550px" mb={4} mt="10px" ml={"10px"} >
             <CardHeader bg={passport.certified?"green.500":"yellow.400"} color="white" textAlign="center" py={2} as="b" >
             {passport.certified?"Certified":"Pending"}
             </CardHeader>
@@ -180,8 +192,10 @@ const CertifierCard = () => {
               </ButtonGroup>
             </CardFooter>
           </Card>
+          </WrapItem>
         ))
       ))}
+      </Wrap>
       </Box>
       </Flex>
       </ChakraBaseProvider>
