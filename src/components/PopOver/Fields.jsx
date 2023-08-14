@@ -46,7 +46,18 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
 
   const AssignFunction = async (editableFields) => {
     try {
-      console.log(address);
+      if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
+        // Check if the assigned address matches the current user's address
+        toast({
+          title: "Cannot assign yourself as Maintenance",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+        setAddress(""); // Clear the input field
+        return;
+      }
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -96,7 +107,7 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
   const handleAssignClick = () => {
     // Use the 'address' state variable instead of direct DOM access
     const formattedEditableFields = selectedFields.join(", ");
-    console.log(formattedEditableFields);
+    
     AssignFunction(formattedEditableFields);
   };
 
@@ -158,7 +169,7 @@ const FieldForm = ({ name, color, formbutton, id }) => {
         onOpen={onOpen}
         onClose={onClose}
         placement="right"
-        closeOnBlur={false}
+        closeOnBlur={true}
       >
         <PopoverTrigger>
           <Button leftIcon={<PlusSquareIcon />} colorScheme={color} variant="solid">

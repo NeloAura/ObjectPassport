@@ -152,12 +152,12 @@ const CertifierCard = () => {
           ) : (
             (filteredPassports.length === 0) ?  (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
-              <Box bg="white">
+              
                 <Text textAlign="center" color="#C40234" fontSize="24px" as="b" 
-                ml="500px">
+                mt="300px" ml="575px" bg="white">
                   No passport to Certify at the moment.
                 </Text>
-                </Box>
+                
               </Center>
             ) : (
               filteredPassports.map((passport) => (
@@ -168,7 +168,7 @@ const CertifierCard = () => {
             </CardHeader>
             <CardBody>
             <p><Badge colorScheme="orange">ID:</Badge> <Badge>{passport.id}</Badge></p>
-            <p><Badge colorScheme="twitter">Name:</Badge>{passport.name}</p>
+            <p><Badge colorScheme="twitter">Name:</Badge><Badge colorScheme="whatsapp">{passport.name}</Badge></p>
               <p><Badge colorScheme="twitter">Owner:</Badge> {passport.owner}</p>
                   <p><Badge colorScheme="facebook">Maintenance Party:</Badge>{passport.maintenanceParty}</p>
                   <p>

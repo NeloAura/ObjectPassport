@@ -45,49 +45,78 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
   }
 
   const AssignFunctions = async (formbutton) => {
-    try {
-      console.log(address);
-      await requestAccount()
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
-      const formattedAddress = ethers.utils.getAddress(address);
+  try {
+    
+    await requestAccount();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const formattedAddress = ethers.utils.getAddress(address);
 
-      switch(formbutton) {
-        case 'Transfer':
-          setIsWaiting(true); // Set waiting state
-          const transferPassport = await contract.changeOwner(formattedAddress, id);
-          await transferPassport.wait();
-          console.log("Passport transferred successfully!");
-          setIsWaiting(false); // Reset waiting state
-          break;
-
-        case 'Assign':
-          setIsWaiting(true); // Set waiting state
-          const assigncertifyingParty = await contract.designatecertifyingParty(id, formattedAddress);
-          await assigncertifyingParty.wait();
-          console.log("Passport assigned successfully!");
-          setIsWaiting(false); // Reset waiting state
-          break;
-
-        default:
-          console.warn("Unknown form button:", formbutton);
+    if (formbutton === 'Assign') {
+      // Check if the address matches the user's address
+      if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
+        // Show error toast
+        toast({
+          title: "Cannot assign yourself as Certifier",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+        // Clear the input field
+        setAddress("");
+        return; // Return without performing the assignment
       }
-
-      // Show success toast
-      toast({
-        title: `${formbutton} successful`,
-        status: "success",
-        position:"top-right",
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error) {
-      console.error("Error transferring/passport:", error);
-    } finally {
-      onCancel(); // Close the popover
+      
+      // Perform the assignment
+      setIsWaiting(true); // Set waiting state
+      const assigncertifyingParty = await contract.designatecertifyingParty(id, formattedAddress);
+      await assigncertifyingParty.wait();
+      console.log("Passport assigned successfully!");
+      setIsWaiting(false); // Reset waiting state
+    } else if (formbutton === 'Transfer') {
+      // Check if the address matches the current owner's address
+      
+      if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
+        // Show error toast
+        toast({
+          title: "You're already the passport owner",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+        // Clear the input field
+        setAddress("");
+        return; // Return without performing the transfer
+      }
+      
+      // Perform the transfer
+      setIsWaiting(true); // Set waiting state
+      const transferPassport = await contract.changeOwner(formattedAddress, id);
+      await transferPassport.wait();
+      console.log("Passport transferred successfully!");
+      setIsWaiting(false); // Reset waiting state
+    } else {
+      console.warn("Unknown form button:", formbutton);
     }
-  };
+
+    // Show success toast
+    toast({
+      title: `${formbutton} successful`,
+      status: "success",
+      position: "top-right",
+      duration: 5000,
+      isClosable: true,
+    });
+  } catch (error) {
+    console.error("Error transferring/passport:", error);
+  } finally {
+    onCancel(); // Close the popover
+  }
+};
+
 
   const handleCreateClick = () => {
     AssignFunctions(formbutton);
@@ -135,7 +164,7 @@ const AssignPopoverForm = ({ name, color, formbutton, id }) => {
         onOpen={onOpen}
         onClose={onClose}
         placement="right"
-        closeOnBlur={false}
+        closeOnBlur={true}
       >
         <PopoverTrigger>
           <Button leftIcon={<PlusSquareIcon />} colorScheme={color} variant="solid">

@@ -8,27 +8,15 @@ import {
   Button,
   Heading,
   Flex,
-  FormControl,
-  GridItem,
-  FormLabel,
-  Input,
-  Select,
-  SimpleGrid,
-  InputLeftAddon,
-  InputGroup,
-  Textarea,
-  FormHelperText,
-  InputRightElement,
 } from '@chakra-ui/react'
 
 import { useToast } from '@chakra-ui/react'
-import logo from './Start.gif'
-import login from './Login.gif'
-import create from './Create.gif'
+import logo from '../../assets/gifs/Start.gif'
+import login from '../../assets/gifs/Login.gif'
+import create from '../../assets/gifs/Create.gif'
 
 const Form1 = () => {
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
+  
   return (
     <>
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
@@ -67,7 +55,7 @@ const Form3 = () => {
   )
 }
 
-export default function Stepper() {
+export default function Stepper({onClose}) {
   const toast = useToast()
   const [step, setStep] = useState(1)
   const [progress, setProgress] = useState(33.33)
@@ -75,14 +63,14 @@ export default function Stepper() {
   return (
     <>
       <Box
+        bg={"white"}
         borderWidth="1px"
         rounded="lg"
-        shadow="1px 1px 3px rgba(0,0,0,0.3)"
         maxWidth={800}
         p={6}
         m="10px auto"
         as="form">
-        <Progress hasStripe value={progress} mb="5%" mx="5%" isAnimated></Progress>
+        <Progress hasStripe value={progress} mb="5%" mx="5%" isAnimated colorScheme='whatsapp'></Progress>
         {step === 1 ? <Form1 /> : step === 2 ? <Form2 /> : <Form3 />}
         <ButtonGroup mt="5%" w="100%">
           <Flex w="100%" justifyContent="space-between">
@@ -93,7 +81,7 @@ export default function Stepper() {
                   setProgress(progress - 33.33)
                 }}
                 isDisabled={step === 1}
-                colorScheme="teal"
+                colorScheme="twitter"
                 variant="solid"
                 w="7rem"
                 mr="5%">
@@ -110,7 +98,7 @@ export default function Stepper() {
                     setProgress(progress + 33.33)
                   }
                 }}
-                colorScheme="teal"
+                colorScheme="facebook"
                 variant="outline">
                 Next
               </Button>
@@ -118,18 +106,24 @@ export default function Stepper() {
             {step === 3 ? (
               <Button
                 w="7rem"
-                colorScheme="red"
+                colorScheme="whatsapp"
                 variant="solid"
                 onClick={() => {
                   toast({
-                    title: 'Account created.',
-                    description: "We've created your account for you.",
+                    position:"top-right",
+                    title: 'Perfect Decision',
+                    description: "Redirecting... ",
                     status: 'success',
                     duration: 3000,
                     isClosable: true,
                   })
+                  setTimeout(()=>{
+                    onClose();
+                  }, 3000)
+                  
+
                 }}>
-                Submit
+                Start Now
               </Button>
             ) : null}
           </Flex>

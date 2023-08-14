@@ -133,11 +133,11 @@ const MaintenanceCard = () => {
             </Center>
           ) : filteredPassports.length === 0 ? (
             <Center flexGrow={1} alignItems="center" justifyContent="center">
-            <Box bg="white">
-              <Text textAlign="center" color="#C40234" fontSize="24px" as="b" ml="400px">
+            
+              <Text textAlign="center" color="#C40234" fontSize="24px" as="b" mt="300px" ml="500px" bg="white">
                 No passport to perform Maintanance at the moment.
               </Text>
-              </Box>
+              
             </Center>
           ) : (
             filteredPassports.map((passport) => {

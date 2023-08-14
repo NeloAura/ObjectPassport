@@ -7,6 +7,7 @@ import {
   Input,
   ButtonGroup,
   Button,
+  Tag,
   ChakraProvider
 
 } from '@chakra-ui/react';
@@ -70,7 +71,7 @@ function AuraPassportPage() {
           <Heading size="xl" color="#36454F" bg="#F5F5F5"  rounded={'lg'}>
             Welcome to Aura-Passport's
           </Heading>
-          
+          <Tag colorScheme='wha'>
           <Input
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
@@ -83,6 +84,7 @@ function AuraPassportPage() {
             bg="#8C92AC"
             minW="425px"
           />
+          </Tag>
           {!isLoggedIn ? (
             <>
               <Button colorScheme="teal" size="lg" mt={4} onClick={handleConnect}>

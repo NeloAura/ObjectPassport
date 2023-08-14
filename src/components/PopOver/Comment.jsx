@@ -42,7 +42,7 @@ const CommentForm = ({ button, color,checker, id, name, description, expirationD
         onOpen={onOpen}
         onClose={onClose}
         placement="right"
-        closeOnBlur={false}
+        closeOnBlur={true}
       >
         <PopoverTrigger>
        
