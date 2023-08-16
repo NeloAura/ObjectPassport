@@ -1,11 +1,11 @@
 
 import { Routes, Route } from "react-router-dom";
 import { SaasProvider } from '@saas-ui/react'
-import ObjectPassportCard from './components/OwnerPassport';
-import CertifierCard from './components/CertiffierPassport';
-import MaintenanceCard from './components/MaintanancePassport';
-import AuraPassportPage from "./components/Login";
-import PassportEvent from "./components/PassportEvent";
+import ObjectPassportCard from './pages/OwnerPassport';
+import CertifierCard from './pages/CertiffierPassport';
+import MaintenanceCard from './pages/MaintanancePassport';
+import AuraPassportPage from "./pages/Login";
+import PassportEvent from "./pages/PassportEvent";
 
 function App() {
   return (
