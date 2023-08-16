@@ -7,14 +7,20 @@ contract ObjectPassport {
         address owner;
         address maintenanceParty;
         address certifyingParty;
+        string name;
+        string fullname;
+        string description;
+        string nationality;
+        string sex;
+        string photograph;
+        string referenceDocument;
+        string editableFields;
+        uint256 lastMaintenanceTimestamp;
+        uint256 expirationDate;
         bool maintenancePerformed;
         bool certified;
-        string name;
-        string description;
         MaintenanceRecord[] maintenanceHistory;
-        uint256 lastMaintenanceTimestamp;
-        string editableFields;
-        uint256 expirationDate;
+       
     }
 
     struct MaintenanceRecord {
@@ -69,11 +75,21 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
 }
 
 
-    function createPassport(string memory name,string memory description) external {
+    function createPassport(
+        string memory name,
+        string memory fullname,
+        string memory description , 
+        string memory nationality,
+        string memory sex,
+        string memory photograph) external {
         passportCount++;
         passports[passportCount].owner = msg.sender;
         passports[passportCount].name = name;
         passports[passportCount].description = description;
+        passports[passportCount].fullname = fullname;
+        passports[passportCount].nationality = nationality;
+        passports[passportCount].sex = sex;
+        passports[passportCount].photograph =  photograph;
     }
 
     function changeOwner(address newOwner, uint256 _passportId) public onlyOwner(_passportId) {
@@ -105,8 +121,11 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
  function performMaintenance(
     uint256 _passportId,
     string memory _comments,
-    string memory _name,
-    string memory _description,
+    string memory _passportname,
+    string memory _fullname, 
+    string memory _nationality,
+    string memory _sex,
+    string memory _photograph,
     uint256 _expirationDate
 ) external onlyMaintenanceParty(_passportId) {
     
@@ -123,14 +142,19 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
     passport.maintenanceHistory.push(newRecord);
 
     // Update passport data
-    passport.name = _name;
-    passport.description = _description;
+    passport.name = _passportname;
     passport.expirationDate = _expirationDate;
+    passports[passportCount].fullname = _fullname;
+    passports[passportCount].nationality = _nationality;
+    passports[passportCount].sex = _sex;
+    passports[passportCount].photograph = _photograph;
 }
 
 
-function certifyObject(uint256 _passportId) external onlyCertifyingParty(_passportId) {
+function certifyObject(uint256 _passportId ,string memory _referenceDocument  ) external onlyCertifyingParty(_passportId) {
         passports[_passportId].certified = true;
         passports[_passportId].expirationDate = block.timestamp + 2 * 365 days;
+        passports[_passportId].referenceDocument = _referenceDocument;
+
     }
 }

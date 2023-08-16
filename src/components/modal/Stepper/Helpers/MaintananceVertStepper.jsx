@@ -23,7 +23,7 @@ function MVertStepper() {
     const steps = [
       {
         name: 'step 1',
-        title: 'Use the + button to create a new passport',
+        title: 'Use the ⚙️ button to view passports assigned to you for maintenance.',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
@@ -39,7 +39,7 @@ function MVertStepper() {
       },
       {
         name: 'step 2',
-        title: 'Accept transaction in your metamask',
+        title: '',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
@@ -61,7 +61,7 @@ function MVertStepper() {
       },
       {
         name: 'step 3',
-        title: 'Find your new passport in MyPassports page',
+        title: 'Accept the transaction in your metamask',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={card} alt="loading..." /></Box>

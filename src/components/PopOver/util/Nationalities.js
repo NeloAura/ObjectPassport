@@ -1,5 +1,5 @@
 const nationalities = [
-    "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Anguillan",
+    "-","Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Anguillan",
     "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini",
     "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bermudian",
     "Bhutanese", "Bolivian", "Botswanan", "Brazilian", "British", "British Virgin Islander",
@@ -38,5 +38,7 @@ const nationalities = [
     "Vincentian", "Wallisian", "Welsh", "Yemeni", "Zambian", "Zimbabwean"
 ]
 
+  const genders = ["-","Male" , "Female" , "Non-Binary"]
 
-module.exports = nationalities;
+
+  export { nationalities, genders };

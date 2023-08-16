@@ -17,6 +17,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import FocusLock from "react-focus-lock";
+import ipfs from "../../utils/ipfsApi";
 import { parse } from "date-fns";
 import ObjectPassportAbi from "../../../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
@@ -30,9 +31,22 @@ const TextInput = React.forwardRef((props, ref) => {
   );
 });
 
-const CommentForm = ({ button, color,checker, id, name, description, expirationDate }) => {
+const CommentForm = ({
+   button, 
+   color,
+   checker, 
+   id,
+   name,
+   fullname,
+   nationality,
+   gender,
+   buffer, 
+   useBuffer,
+   expirationDate }) => {
+
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
+  
 
   return (
     <>
@@ -60,7 +74,11 @@ const CommentForm = ({ button, color,checker, id, name, description, expirationD
               onCancel={onClose}
               id={id}
               name={name}
-              description={description}
+              fullname={fullname}
+              nationality={nationality}
+              gender={gender}
+              buffer={buffer}
+              useBuffer={useBuffer}
               expirationDate={expirationDate}
             />
           </FocusLock>
@@ -70,12 +88,23 @@ const CommentForm = ({ button, color,checker, id, name, description, expirationD
   );
 };
 
-const Form = ({ firstFieldRef, onCancel, id, name, description, expirationDate }) => {
+const Form = ({ 
+  firstFieldRef, 
+  onCancel, 
+  id, 
+  name, 
+  fullname,
+  nationality,
+  gender,
+  buffer,
+  expirationDate }) => {
   const [comment, setComment] = useState("");
+  const [photograph, setPhotograph] = useState("");
   const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
   const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
   const abi = ObjectPassportAbi.abi;
   const toast = useToast(); // Initialize the toast
+
 
   const formatDateToTimestamp = (dateString) => {
     const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
@@ -88,6 +117,9 @@ const Form = ({ firstFieldRef, onCancel, id, name, description, expirationDate }
 
   const EditFunction = async () => {
     try {
+      const result = await ipfs.add(buffer);
+      if (result) {
+      setPhotograph(result.path)
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -97,7 +129,10 @@ const Form = ({ firstFieldRef, onCancel, id, name, description, expirationDate }
         id,
         comment,
         name,
-        description,
+        fullname,
+        nationality,
+        gender,
+        photograph, 
         formatDateToTimestamp(expirationDate)
       );
       await assignMaintenanceParty.wait();
@@ -112,7 +147,7 @@ const Form = ({ firstFieldRef, onCancel, id, name, description, expirationDate }
         duration: 5000,
         isClosable: true,
       });
-    } catch (error) {
+    }} catch (error) {
       console.error("Error editing:", error);
     } finally {
       onCancel(); // Close the popover

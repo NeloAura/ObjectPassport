@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Stack,
+  VStack,
   ButtonGroup,
   Button,
   useDisclosure,
@@ -15,7 +16,8 @@ import {
   Input,
   Spinner,
   useToast,
-  Flex // Import useToast
+  Flex, // Import useToast
+  Center,
 } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
@@ -46,7 +48,9 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
 
   const AssignFunction = async (editableFields) => {
     try {
-      if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
+      if (
+        address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()
+      ) {
         // Check if the assigned address matches the current user's address
         toast({
           title: "Cannot assign yourself as Maintenance",
@@ -77,7 +81,7 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
       toast({
         title: `${formbutton} successful`,
         status: "success",
-        position:"top-right",
+        position: "top-right",
         duration: 5000,
         isClosable: true,
       });
@@ -95,7 +99,10 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
 
     if (isChecked) {
       // Add the field to the selected fields array
-      setSelectedFields((prevSelectedFields) => [...prevSelectedFields, fieldName]);
+      setSelectedFields((prevSelectedFields) => [
+        ...prevSelectedFields,
+        fieldName,
+      ]);
     } else {
       // Remove the field from the selected fields array
       setSelectedFields((prevSelectedFields) =>
@@ -107,45 +114,82 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
   const handleAssignClick = () => {
     // Use the 'address' state variable instead of direct DOM access
     const formattedEditableFields = selectedFields.join(", ");
-    
+
     AssignFunction(formattedEditableFields);
   };
 
   return (
     <Stack spacing={4}>
-    {!isWaiting && (
-      <>
-      <TextInput
-        label="Wallet Address"
-        id="adds"
-        ref={firstFieldRef}
-        value={address}
-        onChange={(event) => setAddress(event.target.value)}
-      />
+      {!isWaiting && (
+        <>
+        <Center>
+        <FormLabel htmlFor="ir" >Wallet Address</FormLabel>
+        </Center>
+          <TextInput
+            id="adds"
+            ref={firstFieldRef}
+            value={address}
+            onChange={(event) => setAddress(event.target.value)}
+          />
+          
+          <Center>
+            <FormLabel htmlFor="i" >Maintenance Fields</FormLabel>
+          </Center>
 
-      <FormLabel htmlFor="i">Maintenance Fields</FormLabel>
+          <VStack spacing={5} direction="row">
+            <Checkbox
+              value="name"
+              colorScheme="red"
+              onChange={handleCheckboxChange}
+            >
+              Passport-Name
+            </Checkbox>
+            <Checkbox
+              value="name"
+              colorScheme="yellow"
+              onChange={handleCheckboxChange}
+            >
+              FullName
+            </Checkbox>
+            <Checkbox
+              value="description"
+              colorScheme="green"
+              onChange={handleCheckboxChange}
+            >
+              Nationatlity
+            </Checkbox>
+            <Checkbox
+              value="sex"
+              colorScheme="purple"
+              onChange={handleCheckboxChange}
+            >
+              Gender
+            </Checkbox>
+            <Checkbox
+              value="photograph"
+              colorScheme="pink"
+              onChange={handleCheckboxChange}
+            >
+              Photo
+            </Checkbox>
+            <Checkbox
+              value="expirationDate"
+              colorScheme="blue"
+              onChange={handleCheckboxChange}
+            >
+              Expiration Date
+            </Checkbox>
+          </VStack>
 
-      <Stack spacing={5} direction="row">
-        <Checkbox value="name" colorScheme="purple" onChange={handleCheckboxChange}>
-          Name
-        </Checkbox>
-        <Checkbox value="description" colorScheme="green" onChange={handleCheckboxChange}>
-          Desc
-        </Checkbox>
-        <Checkbox value="expirationDate" colorScheme="blue" onChange={handleCheckboxChange}>
-          Expiration Date
-        </Checkbox>
-      </Stack>
-
-      <ButtonGroup display="flex" justifyContent="flex-end">
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button colorScheme="red" onClick={handleAssignClick}>
-          {formbutton}
-        </Button>
-      </ButtonGroup>
-      </>
+          <ButtonGroup display="flex" justifyContent="center">
+            <Button variant="ghost" colorScheme="red" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button colorScheme="whatsapp" onClick={handleAssignClick}>
+              {formbutton}
+            </Button>
+          </ButtonGroup>
+        </>
       )}
 
       {isWaiting && (
@@ -172,7 +216,11 @@ const FieldForm = ({ name, color, formbutton, id }) => {
         closeOnBlur={true}
       >
         <PopoverTrigger>
-          <Button leftIcon={<PlusSquareIcon />} colorScheme={color} variant="solid">
+          <Button
+            leftIcon={<PlusSquareIcon />}
+            colorScheme={color}
+            variant="solid"
+          >
             {name}
           </Button>
         </PopoverTrigger>
@@ -180,7 +228,12 @@ const FieldForm = ({ name, color, formbutton, id }) => {
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow />
             <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} formbutton={formbutton} id={id} />
+            <Form
+              firstFieldRef={firstFieldRef}
+              onCancel={onClose}
+              formbutton={formbutton}
+              id={id}
+            />
           </FocusLock>
         </PopoverContent>
       </Popover>

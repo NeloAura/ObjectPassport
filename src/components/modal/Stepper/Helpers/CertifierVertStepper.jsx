@@ -23,7 +23,7 @@ function CVertStepper() {
     const steps = [
       {
         name: 'step 1',
-        title: 'Use the + button to create a new passport',
+        title: 'Use the certify button to view passports assigned to you for certification.',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
@@ -39,7 +39,7 @@ function CVertStepper() {
       },
       {
         name: 'step 2',
-        title: 'Accept transaction in your metamask',
+        title: 'Use the button to filter between already certified passports and those awaiting certification',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
@@ -61,7 +61,74 @@ function CVertStepper() {
       },
       {
         name: 'step 3',
-        title: 'Find your new passport in MyPassports page',
+        title: 'Click the "Approve" button to certify the passport',
+        children: (
+          <>
+            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
+            <ButtonGroup  ml={"40px"}> 
+              <Button
+                onClick={back}
+                isDisabled={step === 0}
+                variant="ghost"
+                colorScheme="twitter"
+              >Back</Button>
+              <Button
+                onClick={next}
+                isDisabled={step >= 3}
+                colorScheme="facebook"
+              >Next</Button>
+            </ButtonGroup>
+          </>
+        ),
+      },
+      {
+        name: 'step 4',
+        title: 'Enter your comment',
+        children: (
+          <>
+            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
+            <ButtonGroup  ml={"40px"}> 
+              <Button
+                onClick={back}
+                isDisabled={step === 0}
+                variant="ghost"
+                colorScheme="twitter"
+              >Back</Button>
+              <Button
+                onClick={next}
+                isDisabled={step >= 3}
+                colorScheme="facebook"
+              >Next</Button>
+            </ButtonGroup>
+          </>
+        ),
+      },
+
+      {
+        name: 'step 4',
+        title: 'Approve transcation in your metamask',
+        children: (
+          <>
+            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
+            <ButtonGroup  ml={"40px"}> 
+              <Button
+                onClick={back}
+                isDisabled={step === 0}
+                variant="ghost"
+                colorScheme="twitter"
+              >Back</Button>
+              <Button
+                onClick={next}
+                isDisabled={step >= 3}
+                colorScheme="facebook"
+              >Next</Button>
+            </ButtonGroup>
+          </>
+        ),
+      },
+      {
+        name: 'step 4',
+        title: 'Find the certified passports approved by you ',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={card} alt="loading..." /></Box>

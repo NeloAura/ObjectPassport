@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import {
   IconButton,
   VStack,
@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Stack,
+  Select,
   ButtonGroup,
   Button,
   useDisclosure,
@@ -28,6 +29,9 @@ import {
 } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useNavigate } from 'react-router-dom';
+import { Buffer } from "buffer";
+import { nationalities, genders } from "./PopOver/util/Nationalities";
+import ipfs from "./utils/ipfsApi";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
@@ -50,17 +54,47 @@ const TextInput = React.forwardRef((props, ref) => {
 const Form = ({ firstFieldRef, onCancel }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [nationality, setNationalilty] = useState("");
+  const [gender, setGender] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [photoValue, setPhotoValue] =useState("");
+  const [photograph, setPhotograph] = useState("");
+  const [buffer, setBuffer] = useState(null);
   const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
   const toast = useToast(); // Initialize the toast
 
+  const captureFile = (eventvalue ,event) => {
+    setPhotoValue(eventvalue);
+    event.preventDefault();
+    const file = event.target.files[0];
+    
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);  // Read buffered file
+
+    // Callback
+    reader.onloadend = () => {
+      setBuffer(Buffer.from(reader.result));
+      
+    };
+  };
+
+  useEffect(() => {
+    if (buffer) {
+      console.log('=== buffer ===', buffer);
+    }
+  }, [buffer]);
+
   const createPassport = async () => {
     try {
+      const result = await ipfs.add(buffer);
+      if (result) {
+      setPhotograph(result.path)
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
       setIsWaiting(true); // Set waiting state
-      const create = await contract.createPassport(name, description);
+      const create = await contract.createPassport(name, fullName, description,nationality,gender,photograph);
       await create.wait();
       console.log("Passport created successfully!");
       setIsWaiting(false); // Reset waiting state
@@ -73,12 +107,14 @@ const Form = ({ firstFieldRef, onCancel }) => {
         duration: 5000,
         isClosable: true,
       });
+    }
     } catch (error) {
       console.error("Error creating passport:", error);
       // Handle error, e.g., show an error message to the user
     } finally {
       onCancel(); // Close the popover
     }
+  
   };
 
   const handleCreateClick = () => {
@@ -90,17 +126,55 @@ const Form = ({ firstFieldRef, onCancel }) => {
     {!isWaiting && (
       <>
       <TextInput
-        label="Passport name"
-        id="name"
+        label="Passport Name & Full Name"
+        id="passportname"
+        placeholder="Provide Passport Name"
         ref={firstFieldRef}
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
       <TextInput
-        label="Description"
+        placeholder="Provide Your Full Name"
+        id="fullname"
+        value={fullName}
+        onChange={(event) => setFullName(event.target.value)}
+      />
+      <FormLabel htmlFor={`nationality`}>Nationality & Gender</FormLabel>
+                    <Select
+                      id={`nationality`}
+                      value={nationality}
+                      onChange={(event) => setNationalilty(event.target.value)}
+                    >
+                      {nationalities.map((nationality) => (
+                        <option key={nationality} value={nationality}>
+                          {nationality}
+                        </option>
+                      ))}
+                    </Select>
+
+                    <Select
+                      id={`sex`}
+                      value={gender}
+                      onChange={(event) => setGender(event.target.value)}
+                    >
+                      {genders.map((gender) => (
+                        <option key={gender} value={gender}>
+                          {gender}
+                        </option>
+                      ))}
+                    </Select>              
+      <TextInput
+        label="Justification For Passport"
         id="description"
         value={description}
         onChange={(event) => setDescription(event.target.value)}
+      />
+      <FormLabel htmlFor={`photograph`}> Upload Photograph</FormLabel>
+      <Input
+        type="file"
+        id="photograph"
+        value={photoValue}
+        onChange={(e) => captureFile(e.target.value , e)}
       />
       <ButtonGroup display="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>

@@ -14,8 +14,10 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Divider,
   Text,
   Spinner,
+  Select,
   Badge,
   Button,
   Wrap,
@@ -28,6 +30,8 @@ import { SearchInput } from '@saas-ui/react'
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
 import Image from "../assets/images/SPL.png"
+import { nationalities, genders } from "../components/PopOver/util/Nationalities";
+import { Buffer } from "buffer";
 const { ethers } = require("ethers");
 
 const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
@@ -44,7 +48,11 @@ const MaintenanceCard = () => {
   const [loading, setLoading] = useState(true);
   const [userWalletAddress, setUserWalletAddress] = useState("");
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [gender, setGender] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [photoValue, setPhotoValue] =useState("");
+  const [buffer , setBuffer]= useState(null);
   const [expirationDate, setExpirationDate] = useState("");
   const [value, setValue] = React.useState('')
   const [show, setShow] = React.useState(true);
@@ -87,6 +95,22 @@ const MaintenanceCard = () => {
 
     fetchPassports();
   }, [ passports, userWalletAddress , value , show]);
+
+  const captureFile = (eventvalue ,event) => {
+    
+    event.preventDefault();
+    setPhotoValue(eventvalue);
+    const file = event.target.files[0];
+    
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);  // Read buffered file
+
+    // Callback
+    reader.onloadend = () => {
+      setBuffer(Buffer.from(reader.result));
+      console.log(buffer)
+    };
+  };
 
   const formatDateToISO = (timestamp) => {
     const parsedDate = fromUnixTime(timestamp);
@@ -164,25 +188,73 @@ const MaintenanceCard = () => {
                     <Badge colorScheme="teal">{passport.owner}</Badge>
                   </p>
                   <p>
+                    <Badge colorScheme="telegram">Justification:</Badge>{" "}
+                    <Text color="black" as={"b"} >{passport.description} </Text>
+                  </p>
+                  <p>
                     <Badge colorScheme="facebook">Last Maintanance:</Badge>{" "}
                     <Badge colorScheme="whatsapp">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))==="1969-12-31"?("No Maintanance Performed yet"):formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
                   </p>
-                  <Stack spacing={3} mt="5px">
+                  <Box position="relative" padding="3">
+                        <Divider  />
+                      </Box>
+                  <Stack spacing={3} mt="7px">
                     <InputGroup size="sm">
-                      <InputLeftAddon children="name" bg="#68bfff" />
+                      <InputLeftAddon children="passport-name" bg="#68bfff" />
                       <Input
                         defaultValue={passport.name}
                         onChange={(e) => setName(e.target.value)}
                         isDisabled={!editableFields.includes("name")}
                       />
                     </InputGroup>
+                    <InputGroup size="sm">
+                      <InputLeftAddon children="full-name" bg="#68bfff" />
+                      <Input
+                        defaultValue={passport.fullname}
+                        onChange={(e) => setFullName(e.target.value)}
+                        isDisabled={!editableFields.includes("fullname")}
+                      />
+                    </InputGroup>
 
                     <InputGroup size="sm">
-                      <InputLeftAddon children="description" bg="#6895ff" />
+                    <InputLeftAddon children="nationality" bg="#7be0ea" />
+                    <Select
+                      id={`nationality`}
+                      defaultValue={passport.nationality}
+                      onChange={(e) => setNationality(e.target.value)}
+                      isDisabled={!editableFields.includes("nationality")}
+                    >
+                      {nationalities.map((nationality) => (
+                        <option key={nationality} value={nationality}>
+                          {nationality}
+                        </option>
+                      ))}
+                    </Select>
+                    </InputGroup>
+
+                    <InputGroup size="sm">
+                    <InputLeftAddon children="gender" bg="#7be0ea" />
+                    <Select
+                      id={`gender`}
+                      defaultValue={passport.sex}
+                      onChange={(e) => setGender(e.target.value)}
+                      isDisabled={!editableFields.includes("sex")}
+                    >
+                      {genders.map((gender) => (
+                        <option key={gender} value={gender}>
+                          {gender}
+                        </option>
+                      ))}
+                    </Select>
+                    </InputGroup>
+              
+                    <InputGroup size="sm">
+                      <InputLeftAddon children="upload-new-photo" bg="#6895ff" />
                       <Input
-                        defaultValue={passport.description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        isDisabled={!editableFields.includes("description")}
+                        type="file"
+                        value={photoValue}
+                        onChange={(e) => captureFile(e.target.value , e)}
+                        // isDisabled={!editableFields.includes("photograph")}
                       />
                     </InputGroup>
                     {passport.certified &&
@@ -216,9 +288,11 @@ const MaintenanceCard = () => {
                     button={"Save"}
                     id={passport.id}
                     name={name !== "" ? name : passport.name}
-                    description={
-                      description !== "" ? description : passport.description
-                    }
+                    fullname={fullName !== "" ? fullName : passport.fullname}
+                    nationality={nationality !== "" ? nationality : passport.name}
+                    gender={gender !== "" ? gender : passport.sex}
+                    buffer={buffer}
+                    useBuffer={setBuffer}
                     expirationDate={
                       expirationDate !== ""
                         ? expirationDate
