@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import Explained from './PopOver/Explained';
 import Abus from './PopOver/Abus';
 import Image from "../assets/images/LS.png"
+import QRScanner from './PopOver/QRScanner';
 
 function AuraPassportPage() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -55,9 +56,10 @@ function AuraPassportPage() {
         backgroundRepeat="repeat"
         position="relative" // Set the parent container to relative positioning
       >
-      <ButtonGroup mt="25px" ml="100px">
+      <ButtonGroup mt="25px" ml="60px">
         <Explained/>
         <Abus/>
+        <QRScanner/>
       </ButtonGroup>
       
         <Flex
@@ -69,7 +71,7 @@ function AuraPassportPage() {
         >
        
           <Heading size="xl" color="#36454F" bg="#F5F5F5"  rounded={'lg'}>
-            Welcome to Aura-Passport's
+            Welcome to Aura-Passport
           </Heading>
           <Tag colorScheme='wha'>
           <Input

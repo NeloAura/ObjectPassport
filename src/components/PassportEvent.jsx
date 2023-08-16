@@ -18,77 +18,49 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import VerticalNavigationBar from "./NavigationBar";
 import AssignPopoverForm from "./PopOver/AssignPopOver";
 import FieldForm from "./PopOver/Fields";
 import History from "./PopOver/History";
 import Image from "../assets/images/SPL.png";
-import { SearchInput } from "@saas-ui/react";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import QRCode from "./PopOver/QRCode";
+import { useParams } from "react-router-dom";
 
 const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
 const abi = ObjectPassportAbi.abi;
 
 const { ethers } = require("ethers");
-const ObjectPassportCard = () => {
-  const [passports, setPassports] = useState([]);
-  const [filteredPassports, setFilteredPassporst] = useState([]);
+
+const PassportEvent = () => {
+  const [passport, setPassport] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userWalletAddress, setUserWalletAddress] = useState("");
-  const [value, setValue] = React.useState("");
+  const { id } = useParams();
 
   useEffect(() => {
-    const fetchPassports = async () => {
-      // Connect to the Ethereum network
+    const fetchPassport = async () => {
+      const parsedID = parseInt(id, 10);
+      const uint256Id = ethers.BigNumber.from(parsedID);
+
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      // Load the smart contract
       const contract = new ethers.Contract(contractAddress, abi, provider);
       try {
-        // Get the total number of passports
-        const passportCount = await contract.passportCount();
-        setUserWalletAddress(provider.provider.selectedAddress);
-
-        // Fetch passport details
-        const fetchedPassports = [];
-        for (let i = 1; i <= passportCount; i++) {
-          const passport = await contract.getPassportDetails(i);
-          fetchedPassports.push({ id: i, ...passport });
-        }
-
-        // Update the state with fetched passports
-        setPassports(fetchedPassports);
-        setFilteredPassporst(
-          passports.filter(
-            (passport) =>
-              passport.owner.toLowerCase() ===
-                userWalletAddress.toLowerCase() &&
-              passport.name.toLowerCase().includes(value.toLowerCase())
-          )
-        );
-
+        const fetchedPassport = await contract.getPassportDetails(uint256Id);
+        setPassport(fetchedPassport);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching passports:", error);
+        console.error("Error fetching passport:", error);
         setLoading(false);
       }
     };
 
-    fetchPassports();
-  }, [passports, userWalletAddress, value]);
+    fetchPassport();
+  }, [id]);
 
   const theme = extendTheme({});
 
   return (
     <ChakraBaseProvider theme={theme}>
-      <SearchInput
-        placeholder="Search by Passport Name"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onReset={() => setValue("")}
-      />
       <Flex>
-        <VerticalNavigationBar />
         <Box
           display="flex"
           flexDirection="row"
@@ -112,7 +84,7 @@ const ObjectPassportCard = () => {
                   size="xl"
                 />
               </Center>
-            ) : filteredPassports.length === 0 ? (
+            ) : passport === null ? (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
                 <Text
                   textAlign="center"
@@ -123,23 +95,21 @@ const ObjectPassportCard = () => {
                   ml="400px"
                   bg="white"
                 >
-                  No passport to show at the moment. Click the + button to add
-                  one.
+                  Loading passport details...
                 </Text>
               </Center>
             ) : (
-              filteredPassports.map((passport) => (
-                <WrapItem key={passport.id}>
-                  <Card
-                    key={passport.id}
-                    boxShadow="md"
-                    borderRadius="md"
-                    w="450px"
-                    h="550px"
-                    mb={4}
-                    mt="10px"
-                    ml={"10px"}
-                  >
+              <WrapItem>
+                <Card
+                  key={passport.id}
+                  boxShadow="md"
+                  borderRadius="md"
+                  w="450px"
+                  h="550px"
+                  mb={4}
+                  mt="10px"
+                  ml={"10px"}
+                >
                     <CardHeader bg="blue.500" textAlign="center" py={2}>
                       <Text fontSize="20px" color="white" as="b">
                         {passport.name}
@@ -194,7 +164,7 @@ const ObjectPassportCard = () => {
                         mt={1}
                       >
                         <History name={"History"} passport={passport} />
-                        <QRCode name={"QR-Code"} id={passport.id} />
+                        <QRCode name={"QR-Code"} id={passport.owner} />
                       </ButtonGroup>
                       <Box position="relative" padding="5" mt={"15px"}>
                         <Divider />
@@ -228,7 +198,6 @@ const ObjectPassportCard = () => {
                     </CardFooter>
                   </Card>
                 </WrapItem>
-              ))
             )}
           </Wrap>
         </Box>
@@ -237,4 +206,4 @@ const ObjectPassportCard = () => {
   );
 };
 
-export default ObjectPassportCard;
+export default PassportEvent;

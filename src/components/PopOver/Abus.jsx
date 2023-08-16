@@ -33,14 +33,14 @@ function Abus() {
         <ModalContent>
           <ModalHeader>Who Are We?</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody >
             <Text fontWeight="bold" mb="1rem">
               Coming Soon
             </Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="red" mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
