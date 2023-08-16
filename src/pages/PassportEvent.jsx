@@ -67,7 +67,7 @@ const PassportEvent = () => {
         align="center"
         justify="center"
         minH="100vh" // Set the minimum height to cover the viewport
-        bg="#6CB4EE"
+        bg={"#fffae0"}
       >
         <Box
           w="100%" // Set the width to cover the full viewport
