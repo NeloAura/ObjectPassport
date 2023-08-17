@@ -88,7 +88,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
     try {
       const result = await ipfs.add(buffer);
       if (result) {
-      setPhotograph(result.path)
+      setPhotograph(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -166,6 +166,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
       <TextInput
         label="Justification For Passport"
         id="description"
+        type="textarea"
         value={description}
         onChange={(event) => setDescription(event.target.value)}
       />

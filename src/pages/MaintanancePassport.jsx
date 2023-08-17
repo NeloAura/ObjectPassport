@@ -51,7 +51,7 @@ const MaintenanceCard = () => {
   const [nationality, setNationality] = useState("");
   const [gender, setGender] = useState("");
   const [fullName, setFullName] = useState("");
-  const [photoValue, setPhotoValue] =useState("");
+  const [mPhotoValue, setMPhotoValue] =useState("");
   const [buffer , setBuffer]= useState(null);
   const [expirationDate, setExpirationDate] = useState("");
   const [value, setValue] = React.useState('')
@@ -96,10 +96,11 @@ const MaintenanceCard = () => {
     fetchPassports();
   }, [ passports, userWalletAddress , value , show]);
 
-  const captureFile = (eventvalue ,event) => {
-    
+ 
+
+  const captureFile = (eventvalue,event) => {
+    setMPhotoValue(eventvalue);
     event.preventDefault();
-    setPhotoValue(eventvalue);
     const file = event.target.files[0];
     
     const reader = new window.FileReader();
@@ -107,11 +108,11 @@ const MaintenanceCard = () => {
 
     // Callback
     reader.onloadend = () => {
+      console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
-      console.log(buffer)
+      
     };
   };
-
   const formatDateToISO = (timestamp) => {
     const parsedDate = fromUnixTime(timestamp);
     return format(parsedDate, "yyyy-MM-dd");
@@ -252,8 +253,8 @@ const MaintenanceCard = () => {
                       <InputLeftAddon children="upload-new-photo" bg="#6895ff" />
                       <Input
                         type="file"
-                        value={photoValue}
-                        onChange={(e) => captureFile(e.target.value , e)}
+                          value={mPhotoValue}
+                          onChange={(e) => captureFile(e.target.value , e)}
                         // isDisabled={!editableFields.includes("photograph")}
                       />
                     </InputGroup>

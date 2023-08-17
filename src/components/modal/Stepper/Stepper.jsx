@@ -24,7 +24,6 @@ import {
 import { useToast } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import logo from '../../../assets/gifs/Start.gif'
-import login from '../../../assets/gifs/Login.gif'
 import metamask from '../../../assets/gifs/metamask.gif'
 import polygon from '../../../assets/images/polygon.png'
 import faucet from '../../../assets/gifs/faucet.gif'
@@ -106,8 +105,14 @@ const Form3 = () => {
       <Heading w="100%" textAlign={'center'} fontWeight="normal" mb="2%">
         Connect wallet to login 🔌
       </Heading>
+      
       <Flex>
-      <img src={login} alt="loading..." />
+      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/o1PFZcEKg2x?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    </a>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/o1PFZcEKg2x/embed" width="525" height="360"></iframe>
+</div>
+
       </Flex>
     </>
   )

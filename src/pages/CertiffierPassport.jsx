@@ -5,6 +5,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Image,
   Flex,
   Box,
   Badge,
@@ -13,6 +14,8 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
+  Divider,
+  AbsoluteCenter,
   Button,
   ButtonGroup,
   Text,
@@ -26,7 +29,7 @@ import {
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { SearchInput } from "@saas-ui/react";
 import { Buffer } from "buffer";
-import Image from "../assets/images/SPL.png";
+import Image1 from "../assets/images/SPL.png";
 import ipfs from "../components/utils/ipfsApi";
 import { format, fromUnixTime } from "date-fns";
 
@@ -96,6 +99,7 @@ const CertifierCard = () => {
 
     // Callback
     reader.onloadend = () => {
+      console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
       
     };
@@ -112,6 +116,7 @@ const CertifierCard = () => {
     const parsedDate = fromUnixTime(timestamp);
     return format(parsedDate, "HH:mm:ss");
   };
+
   const handleClick = () => setShow(!show);
 
   async function requestAccount() {
@@ -122,7 +127,8 @@ const CertifierCard = () => {
     try {
       const result = await ipfs.add(buffer);
       if (result) {
-      setReferenceDocument(result.path)
+      console.log('=== result ===', result);
+      setReferenceDocument(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -178,7 +184,7 @@ const CertifierCard = () => {
           flexDirection="row"
           minW={"100%"}
           bg="#6CB4EE"
-          backgroundImage={Image}
+          backgroundImage={Image1}
           backgroundSize="contain"
           backgroundPosition="center"
           backgroundRepeat="repeat"
@@ -217,8 +223,8 @@ const CertifierCard = () => {
                     key={passport.id}
                     boxShadow="md"
                     borderRadius="md"
-                    w="450px"
-                    h="550px"
+                    w="550px"
+                    h="610px"
                     mb={4}
                     mt="10px"
                     ml={"10px"}
@@ -233,49 +239,72 @@ const CertifierCard = () => {
                       {passport.certified ? "Certified✔️" : "Pending🚧"}
                     </CardHeader>
                     <CardBody>
+                    <Center>
+                      <Image
+                        mb={"5"}
+                        boxSize="100px"
+                        objectFit="cover"
+                        src={passport.photograph}
+                        alt="Profile"
+                        fallbackSrc='https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878'
+                      />
+                      </Center>
+                      <Center>
+                      <VStack>
                       <p>
                         <Badge colorScheme="orange">ID:</Badge>{" "}
                         <Badge>{passport.id}</Badge>
                       </p>
                       <p>
-                        <Badge colorScheme="twitter">Name:</Badge>
+                        <Badge colorScheme="twitter">Passport-name:</Badge>
                         <Badge colorScheme="whatsapp">{passport.name}</Badge>
                       </p>
+                      </VStack>
+                      </Center>
+                      <Box   position="relative" padding="5">
+                        <Divider />
+                        <AbsoluteCenter as={"b"} px="2">
+                          Personal Data
+                        </AbsoluteCenter>
+                      </Box>
                       <p>
                         <Badge colorScheme="twitter">Owner:</Badge>{" "}
                         {passport.owner}
                       </p>
                       <p>
+                        <Badge colorScheme="teal">Fullname:</Badge>{" "}
+                        {passport.fullname}
+                      </p>
+                      <p>
+                        <Badge colorScheme="purple">Nationality:</Badge>{" "}
+                        {passport.nationality}
+                      </p>
+                      <p>
+                        <Badge colorScheme="purple">Sex:</Badge>{" "}
+                        {passport.sex}
+                      </p>
+                      <Box   position="relative" padding="5">
+                        <Divider />
+                        <AbsoluteCenter as={"b"} px="2">
+                          Details
+                        </AbsoluteCenter>
+                      </Box>
+                      <p>
                         <Badge colorScheme="facebook">Maintenance Party:</Badge>
                         {passport.maintenanceParty}
                       </p>
                       <p>
-                        <Badge colorScheme="purple">Last Maintanance:</Badge>{" "}
-                        <Badge colorScheme="yellow">
-                          {formatDateToISO(
-                            parseInt(passport.lastMaintenanceTimestamp)
-                          ) === "1969-12-31"
-                            ? "No Maintanance Performed yet"
-                            : formatDateToISO(
-                                parseInt(passport.lastMaintenanceTimestamp)
-                              )}{" "}
-                          @{" "}
-                          {formatDateToISO2(
-                            parseInt(passport.lastMaintenanceTimestamp)
-                          )}{" "}
-                        </Badge>
-                      </p>
+                    <Badge colorScheme="telegram">Justification:</Badge>{" "}
+                    <Text color="black" as={"kbd"}  >{passport.description}</Text>
+                  </p>
+                  {passport.certified &&
                       <p>
                         <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}
                         <Badge>
-                          {formatDateToISO(parseInt(passport.expirationDate))}
+                        {formatDateToISO(parseInt(passport.expirationDate))} - {formatDateToISO2(parseInt(passport.expirationDate))}
                         </Badge>
                       </p>
-
-                      <p>
-                        <Badge colorScheme="blue">Description:</Badge>{" "}
-                        {passport.description}
-                      </p>
+                  }
                       <p>
                         <Badge colorScheme="green">Certified:</Badge>{" "}
                         {passport.certified ? "✅" : "⛔"}
@@ -288,7 +317,7 @@ const CertifierCard = () => {
                       justifyContent={"center"}
                     >
                     <VStack>
-                    {passport.certified &&
+                    {!passport.certified &&
                       <InputGroup size="sm">
                         <InputLeftAddon
                           children="upload-certification-file"

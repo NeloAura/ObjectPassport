@@ -56,6 +56,7 @@ function AuraPassportPage() {
         backgroundRepeat="repeat"
         position="relative" // Set the parent container to relative positioning
       >
+
       <ButtonGroup mt="25px" ml="60px">
         <Explained/>
         <Abus/>
