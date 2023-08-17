@@ -3,6 +3,7 @@ import {
   Flex,
   Box,
   Center,
+  Button,
   ButtonGroup,
   Text,
   Card,
@@ -16,9 +17,13 @@ import {
   Spinner,
   Wrap,
   WrapItem,
+  Image,
+  VStack
 } from "@chakra-ui/react";
+import { ExternalLinkIcon} from '@chakra-ui/icons'
 import History from "../components/modal/History";
-import Image from "../assets/images/SPL.png";
+import Image1 from "../assets/images/SPL.png";
+import { format, fromUnixTime } from "date-fns";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { useParams } from "react-router-dom";
 
@@ -59,6 +64,19 @@ const PassportEvent = () => {
     fetchPassport();
   }, [id]);
 
+
+
+  const formatDateToISO = (timestamp) => {
+    const parsedDate = fromUnixTime(timestamp);
+    return format(parsedDate, "yyyy-MM-dd");
+  };
+
+  const formatDateToISO2 = (timestamp) => {
+    const parsedDate = fromUnixTime(timestamp);
+    return format(parsedDate, "HH:mm:ss");
+  };
+
+
   const theme = extendTheme({});
 
   return (
@@ -72,7 +90,7 @@ const PassportEvent = () => {
         <Box
           w="100%" // Set the width to cover the full viewport
           bg="#6CB4EE"
-          backgroundImage={Image}
+          backgroundImage={Image1}
           backgroundSize="contain"
           backgroundPosition="center"
           backgroundRepeat="repeat"
@@ -107,7 +125,7 @@ const PassportEvent = () => {
                   boxShadow="md"
                   borderRadius="md"
                   w="600px"
-                  h="475px"
+                  h="675px"
                   mb={4}
                   mt="10px"
                   ml={"10px"}
@@ -119,35 +137,84 @@ const PassportEvent = () => {
                     </Text>
                   </CardHeader>
                   <CardBody>
-                    <p color="white">
-                      <Badge colorScheme="teal">Owner:</Badge>{" "}
-                      <Text color="white">{passport.owner}</Text>
-                    </p>
-                    <p color="white">
-                      <Badge colorScheme="messenger">Maintenance Party:</Badge>
-                      <Text color="white">{passport.maintenanceParty}</Text>
-                    </p>
-                    <p>
-                      <Badge colorScheme="twitter">Certifying Party:</Badge>{" "}
-                      <Text color="white">{passport.certifyingParty}</Text>
-                    </p>
-                    <p>
-                      <Badge colorScheme="purple">Description:</Badge>{" "}
-                      <Text color="white" as={"b"}>
-                        {passport.description}
-                      </Text>
-                    </p>
-                    <p>
-                      <Badge colorScheme="orange">Maintenance Performed:</Badge>{" "}
-                      <Text color="white" as={"b"}>
-                        {passport.maintenancePerformed ? "✅" : "⛔" }
-                      </Text>
-                    </p>
-                    <p>
-                      <Badge colorScheme="whatsapp">Certified:</Badge>{" "}
-                        {passport.certified ? "✅" : "⛔" }
-                    </p>
-                    <Box position="relative" padding="10">
+                  <Center>
+                        <Image
+                          mb={"5"}
+                          boxSize="100px"
+                          objectFit="cover"
+                          src={passport.photograph}
+                          alt="Profile"
+                          fallbackSrc="https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
+                        />
+                      </Center>
+                      <Center>
+                      <p display="flex" flex>
+                        <Badge colorScheme="teal">Owner:</Badge>{" "}
+                        <Badge colorScheme="linkedin" >{passport.owner}</Badge>
+                      </p>
+                      </Center>
+                      <Box position="relative" padding="7">
+                        <Divider />
+                        <AbsoluteCenter bg="white" px="4" >
+                          Parties
+                        </AbsoluteCenter>
+                      </Box>
+                      <Center>
+                      <VStack>
+                      <p>
+                        <Badge colorScheme="messenger">
+                          Maintenance Party:
+                        </Badge>{" "}
+                        <Badge colorScheme="yellow" >{passport.maintenanceParty}</Badge>
+                      </p>
+                      <p>
+                        <Badge colorScheme="messenger">Certifying Party:</Badge>{" "}
+                        <Badge colorScheme="yellow" >{passport.certifyingParty}</Badge>
+                      </p>
+                      </VStack>
+                      </Center>
+                      <Box position="relative" padding="7">
+                        <Divider />
+                        <AbsoluteCenter  bg="white" px="4">
+                          Details
+                        </AbsoluteCenter>
+                      </Box>
+                      <Center>
+                      <VStack>
+                      <p>
+                        <Badge colorScheme="teal">Fullname:</Badge>{" "}
+                        <Badge colorScheme="gray" >{passport.fullname}</Badge>
+                      </p>
+                      <p>
+                        <Badge colorScheme="purple">Nationality:</Badge>{" "}
+                        <Badge colorScheme="cyan"> {passport.nationality}</Badge>
+                      </p>
+                      <p>
+                        <Badge colorScheme="purple">Sex:</Badge>{" "}
+                        <Badge colorScheme="cyan" > {passport.sex} </Badge>
+                      </p>
+
+                      <p>
+                        <Badge colorScheme="orange">
+                          Maintenance Performed:
+                        </Badge>{" "}
+                        {passport.maintenancePerformed ? "✅" : "⛔"}
+                      </p>
+                      <p>
+                        <Badge colorScheme="whatsapp">Certified:</Badge>{" "}
+                        {passport.certified ? "✅" : "⛔"}
+                      </p>
+
+                      {passport.certified && (
+                        <p>
+                          <Badge colorScheme="red">Expiration-date:</Badge>{" "}
+                          <Badge colorScheme="messenger">{formatDateToISO(parseInt(passport.expirationDate))} -{" "}
+                          {formatDateToISO2(parseInt(passport.expirationDate))}</Badge>
+                        </p>
+                      )}
+                      </VStack>
+                      </Center>
+                    <Box position="relative" padding="7">
                       <Divider />
                       <AbsoluteCenter bg="white" px="4">
                         Exportable Data
@@ -155,11 +222,15 @@ const PassportEvent = () => {
                     </Box>
                     <ButtonGroup display="flex" justifyContent="center" mt={1}>
                       <History name={"History"} passport={passport} />
+                      {passport.certified &&
+                   
+                    <a href={passport.referenceDocument} target="_blank" rel="noreferrer" >
+                  <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#ffcc00"}>Certification✔️</Button>
+                  </a>
+                   
+                    }
                     </ButtonGroup>
-                    <Box position="relative" padding="5" mt={"15px"}>
-                      <Divider />
-                      <AbsoluteCenter bg="white" px="5"></AbsoluteCenter>
-                    </Box>
+  
                   </CardBody>
                 </Card>
               </WrapItem>
