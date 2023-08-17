@@ -174,7 +174,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
       <Input
         type="file"
         id="photograph"
-        value={photoValue}
+        defaultValue={photoValue}
         onChange={(e) => captureFile(e.target.value , e)}
       />
       <ButtonGroup display="flex" justifyContent="flex-end">

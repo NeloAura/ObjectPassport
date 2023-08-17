@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Flex,
   Box,
+  Button,
   Center,
   ButtonGroup,
   Text,
@@ -19,6 +20,7 @@ import {
   WrapItem,
   Image,
 } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import VerticalNavigationBar from "../components/NavigationBar";
 import AssignPopoverForm from "../components/PopOver/AssignPopOver";
 import FieldForm from "../components/PopOver/Fields";
@@ -166,21 +168,21 @@ const ObjectPassportCard = () => {
                       </ButtonGroup>
                     </CardHeader>
                     <CardBody>
-                    <Center>
-                      <Image
-                        mb={"5"}
-                        boxSize="100px"
-                        objectFit="cover"
-                        src={passport.photograph}
-                        alt="Profile"
-                        fallbackSrc='https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878'
-                      />
+                      <Center>
+                        <Image
+                          mb={"5"}
+                          boxSize="100px"
+                          objectFit="cover"
+                          src={passport.photograph}
+                          alt="Profile"
+                          fallbackSrc="https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
+                        />
                       </Center>
                       <p>
                         <Badge colorScheme="teal">Owner:</Badge>{" "}
                         {passport.owner}
                       </p>
-                      <Box   position="relative" padding="4">
+                      <Box position="relative" padding="4">
                         <Divider />
                         <AbsoluteCenter as={"b"} px="2">
                           Parties
@@ -196,7 +198,7 @@ const ObjectPassportCard = () => {
                         <Badge colorScheme="twitter">Certifying Party:</Badge>{" "}
                         {passport.certifyingParty}
                       </p>
-                      <Box   position="relative" padding="4">
+                      <Box position="relative" padding="4">
                         <Divider />
                         <AbsoluteCenter as={"b"} px="2">
                           Details
@@ -211,10 +213,9 @@ const ObjectPassportCard = () => {
                         {passport.nationality}
                       </p>
                       <p>
-                        <Badge colorScheme="purple">Sex:</Badge>{" "}
-                        {passport.sex}
+                        <Badge colorScheme="purple">Sex:</Badge> {passport.sex}
                       </p>
-                      
+
                       <p>
                         <Badge colorScheme="orange">
                           Maintenance Performed:
@@ -225,13 +226,14 @@ const ObjectPassportCard = () => {
                         <Badge colorScheme="whatsapp">Certified:</Badge>{" "}
                         {passport.certified ? "✅" : "⛔"}
                       </p>
-                   
-                      {passport.certified &&
-                      <p>
-                        <Badge colorScheme="red">Expiration-date:</Badge>{" "}
-                        {formatDateToISO(parseInt(passport.expirationDate))} - {formatDateToISO2(parseInt(passport.expirationDate))}
-                      </p>
-                      }
+
+                      {passport.certified && (
+                        <p>
+                          <Badge colorScheme="red">Expiration-date:</Badge>{" "}
+                          {formatDateToISO(parseInt(passport.expirationDate))} -{" "}
+                          {formatDateToISO2(parseInt(passport.expirationDate))}
+                        </p>
+                      )}
                       <Box position="relative" padding="10">
                         <Divider />
                         <AbsoluteCenter bg="white" px="4">
@@ -244,6 +246,21 @@ const ObjectPassportCard = () => {
                         mt={1}
                       >
                         <History name={"History"} passport={passport} />
+                        {passport.certified && (
+                          <a
+                            href={passport.referenceDocument}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Button
+                              rightIcon={<ExternalLinkIcon />}
+                              bgColor={"#3590e7"}
+                              color={"white"}
+                            >
+                              Certification🤝✔️
+                            </Button>
+                          </a>
+                        )}
                         <QRCode name={"QR-Code"} id={passport.id} />
                       </ButtonGroup>
                       <Box position="relative" padding="3" mt={"15px"}>

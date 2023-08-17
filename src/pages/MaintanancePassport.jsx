@@ -21,15 +21,19 @@ import {
   Badge,
   Button,
   Wrap,
-  WrapItem
+  WrapItem,
+  VStack,
+  AbsoluteCenter,
+  Image
 } from "@chakra-ui/react";
+import { ExternalLinkIcon} from '@chakra-ui/icons'
 import VerticalNavigationBar from "../components/NavigationBar";
 import CommentForm from "../components/PopOver/util/Comment";
 import History from "../components/modal/History";
 import { SearchInput } from '@saas-ui/react'
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
-import Image from "../assets/images/SPL.png"
+import Image1 from "../assets/images/SPL.png"
 import { nationalities, genders } from "../components/PopOver/util/Nationalities";
 import { Buffer } from "buffer";
 const { ethers } = require("ethers");
@@ -51,7 +55,7 @@ const MaintenanceCard = () => {
   const [nationality, setNationality] = useState("");
   const [gender, setGender] = useState("");
   const [fullName, setFullName] = useState("");
-  const [mPhotoValue, setMPhotoValue] =useState("");
+  const [mPhotoValue, setMPhotoValue] = useState("");
   const [buffer , setBuffer]= useState(null);
   const [expirationDate, setExpirationDate] = useState("");
   const [value, setValue] = React.useState('')
@@ -139,7 +143,7 @@ const MaintenanceCard = () => {
     
       <Flex>
         <VerticalNavigationBar />
-        <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image} 
+        <Box display="flex" flexDirection="row" minW={"100%"} bg="#6CB4EE" backgroundImage={Image1} 
         backgroundSize="contain"
         backgroundPosition="center"
         backgroundRepeat="repeat">
@@ -172,33 +176,46 @@ const MaintenanceCard = () => {
               return(
                 <WrapItem key={passport.id}>
               <Card
-               key={passport.id} boxShadow="md" borderRadius="md" w="450px" h="550px" mb={4} mt="10px" ml={"10px"}
+               key={passport.id} boxShadow="md" borderRadius="md" w="450px" h="700px" mb={4} mt="10px" ml={"10px"}
               >
                 <CardHeader
                   bg="#01aece" color="white" textAlign="center" py={2} as="b" 
                 >
                  Maintanance Card
                 </CardHeader>
-                <CardBody>
-                  <p>
-                    <Badge colorScheme="twitter">ID:</Badge>{" "}
-                    <Badge colorScheme="teal">{passport.id}</Badge>
-                  </p>
-                  <p>
-                    <Badge colorScheme="twitter">Owner:</Badge>{" "}
-                    <Badge colorScheme="teal">{passport.owner}</Badge>
-                  </p>
-                  <p>
-                    <Badge colorScheme="telegram">Justification:</Badge>{" "}
-                    <Text color="black" as={"b"} >{passport.description} </Text>
-                  </p>
-                  <p>
+                <CardBody><Center>
+                      <Image
+                        mb={"5"}
+                        boxSize="100px"
+                        objectFit="cover"
+                        src={passport.photograph}
+                        alt="Profile"
+                        fallbackSrc='https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878'
+                      />
+                      </Center>
+                      <Center>
+                      <VStack>
+                      <p>
+                        <Badge colorScheme="orange">ID:</Badge>{" "}
+                        <Badge>{passport.id}</Badge>
+                      </p>
+                      <p>
+                        <Badge colorScheme="twitter">Passport-name:</Badge>
+                        <Badge colorScheme="whatsapp">{passport.name}</Badge>
+                      </p>
+                      <p>
                     <Badge colorScheme="facebook">Last Maintanance:</Badge>{" "}
                     <Badge colorScheme="whatsapp">{formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))==="1969-12-31"?("No Maintanance Performed yet"):formatDateToISO(parseInt(passport.lastMaintenanceTimestamp))} @ {formatDateToISO2(parseInt(passport.lastMaintenanceTimestamp))} </Badge>
                   </p>
-                  <Box position="relative" padding="3">
-                        <Divider  />
+                      </VStack>
+                      </Center>
+                      <Box   position="relative" padding="5">
+                        <Divider />
+                        <AbsoluteCenter as={"b"} px="2">
+                          Personal Data
+                        </AbsoluteCenter>
                       </Box>
+                
                   <Stack spacing={3} mt="7px">
                     <InputGroup size="sm">
                       <InputLeftAddon children="passport-name" bg="#68bfff" />
@@ -253,9 +270,9 @@ const MaintenanceCard = () => {
                       <InputLeftAddon children="upload-new-photo" bg="#6895ff" />
                       <Input
                         type="file"
-                          value={mPhotoValue}
-                          onChange={(e) => captureFile(e.target.value , e)}
-                        // isDisabled={!editableFields.includes("photograph")}
+                        defaultValue={mPhotoValue}
+                        onChange={(e) => captureFile(e.target.value , e)}
+                        isDisabled={!editableFields.includes("photograph")}
                       />
                     </InputGroup>
                     {passport.certified &&
@@ -271,10 +288,14 @@ const MaintenanceCard = () => {
                       />
                     </InputGroup>
                     }
+                    {passport.certified &&
                     <ButtonGroup display="flex" justifyContent="center" mt={5} >
                   <History name={"History"} passport={passport} />
-                 
+                  <a href={passport.referenceDocument} target="_blank" rel="noreferrer" >
+                  <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#b9c57a"}>Certification🤝✔️</Button>
+                  </a>
                 </ButtonGroup>
+                    }
                   </Stack>
                 </CardBody>
                 <CardFooter

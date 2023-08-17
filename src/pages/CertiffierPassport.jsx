@@ -26,6 +26,7 @@ import {
   extendTheme,
   VStack,
 } from "@chakra-ui/react";
+import { ExternalLinkIcon} from '@chakra-ui/icons'
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { SearchInput } from "@saas-ui/react";
 import { Buffer } from "buffer";
@@ -325,7 +326,7 @@ const CertifierCard = () => {
                         />
                         <Input
                           type="file"
-                          value={referenceDocumentValue}
+                          defaultValue={referenceDocumentValue}
                           onChange={(e) => captureFile(e.target.value , e)}
                         />
                       </InputGroup>
@@ -342,6 +343,13 @@ const CertifierCard = () => {
                           Mark Certified
                         </Button>
                       </ButtonGroup>
+                    }
+                    {passport.certified &&
+                    <ButtonGroup>
+                    <a href={passport.referenceDocument} target="_blank" rel="noreferrer" >
+                  <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#b9c57a"}>Certification🤝✔️</Button>
+                  </a>
+                    </ButtonGroup>
                     }
                       </VStack>
                     </CardFooter>
