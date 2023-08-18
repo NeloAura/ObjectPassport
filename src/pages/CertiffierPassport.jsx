@@ -326,7 +326,7 @@ const CertifierCard = () => {
                         />
                         <Input
                           type="file"
-                          defaultValue={referenceDocumentValue}
+                          defaultValue={passport.referenceDocument}
                           onChange={(e) => captureFile(e.target.value , e)}
                         />
                       </InputGroup>
