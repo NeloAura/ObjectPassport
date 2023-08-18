@@ -89,12 +89,14 @@ const Form = ({ firstFieldRef, onCancel }) => {
       const result = await ipfs.add(buffer);
       if (result) {
       setPhotograph(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
+      const photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
       setIsWaiting(true); // Set waiting state
-      const create = await contract.createPassport(name, fullName, description,nationality,gender,photograph);
+      console.log(photograph);
+      const create = await contract.createPassport(name, fullName, description,nationality,gender,photo);
       await create.wait();
       console.log("Passport created successfully!");
       setIsWaiting(false); // Reset waiting state
