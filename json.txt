@@ -1,0 +1,22 @@
+
+
+Owner: passport[0][0]
+Maintenance Party: passport[0][1]
+Certifying Party: passport[0][2]
+Name: passport[0][3]
+Description: passport[0][4]
+Reference Document: passport[0][5]
+Editable Fields: passport[0][6]
+Last Maintenance Timestamp: passport[0][7]
+Expiration Date: passport[0][8]
+Maintenance Performed: passport[0][9]
+Certified: passport[0][10]
+
+
+Properties outside the array:
+
+Fullname: passport.fullname
+Nationality: passport.nationality
+Sex: passport.sex
+Photograph: passport.photograph
+ID: passport.id 

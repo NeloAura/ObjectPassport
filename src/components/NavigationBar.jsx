@@ -35,7 +35,7 @@ import ipfs from "./utils/ipfsApi";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
-const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
 
 async function requestAccount() {

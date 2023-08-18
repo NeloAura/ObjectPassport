@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "hardhat/console.sol";
+
+import "./PersonalDetails.sol";
 
 contract ObjectPassport {
     struct Passport {
@@ -8,11 +9,7 @@ contract ObjectPassport {
         address maintenanceParty;
         address certifyingParty;
         string name;
-        string fullname;
         string description;
-        string nationality;
-        string sex;
-        string photograph;
         string referenceDocument;
         string editableFields;
         uint256 lastMaintenanceTimestamp;
@@ -20,7 +17,7 @@ contract ObjectPassport {
         bool maintenancePerformed;
         bool certified;
         MaintenanceRecord[] maintenanceHistory;
-       
+        uint256 personalDetailsId; 
     }
 
     struct MaintenanceRecord {
@@ -33,6 +30,7 @@ contract ObjectPassport {
     mapping(address => uint256[]) public passportsByOwner;
     mapping(uint256 => mapping(address => bool)) public editableFields;
     uint256 public passportCount;
+    address public personalDetailsContract; // Address of PersonalDetails contract
 
     event OwnerSet(address indexed oldOwner, address indexed newOwner);
 
@@ -43,7 +41,6 @@ contract ObjectPassport {
         );
         _;
     }
-
 
     modifier onlyMaintenanceParty(uint256 _passportId) {
         require(
@@ -61,35 +58,63 @@ contract ObjectPassport {
         _;
     }
 
-    function getAllPassportIds() external view returns (uint256[] memory) {
-    uint256[] memory passportIds = new uint256[](passportCount);
-    for (uint256 i = 0; i < passportCount; i++) {
-        passportIds[i] = i + 1;
+    constructor(address _personalDetailsContract) {
+        personalDetailsContract = _personalDetailsContract;
     }
-    return passportIds;
-}
 
-function getPassportDetails(uint256 _passportId) external view returns (Passport memory) {
-    require(_passportId > 0 && _passportId <= passportCount, "Invalid passport ID");
-    return passports[_passportId];
-}
+    function setPersonalDetailsContract(address _personalDetailsContract) external {
+        personalDetailsContract = _personalDetailsContract;
+    }
 
+    function getAllPassportIds() external view returns (uint256[] memory) {
+        uint256[] memory passportIds = new uint256[](passportCount);
+        for (uint256 i = 0; i < passportCount; i++) {
+            passportIds[i] = i + 1;
+        }
+        return passportIds;
+    }
+
+    function getPassportDetails(uint256 _passportId)
+        external
+        view
+        returns (
+            Passport memory,
+            string memory fullname,
+            string memory nationality,
+            string memory sex,
+            string memory photograph
+        )
+    {
+        require(_passportId > 0 && _passportId <= passportCount, "Invalid passport ID");
+
+        PersonalDetails personalDetailsContractInstance = PersonalDetails(personalDetailsContract);
+        (fullname, nationality, sex, photograph) = personalDetailsContractInstance.getPersonalDetails(_passportId);
+
+        return (
+            passports[_passportId],
+            fullname,
+            nationality,
+            sex,
+            photograph
+        );
+    }
 
     function createPassport(
         string memory name,
         string memory fullname,
-        string memory description , 
+        string memory description,
         string memory nationality,
         string memory sex,
-        string memory photograph) external {
+        string memory photograph
+    ) external {
         passportCount++;
         passports[passportCount].owner = msg.sender;
         passports[passportCount].name = name;
         passports[passportCount].description = description;
-        passports[passportCount].fullname = fullname;
-        passports[passportCount].nationality = nationality;
-        passports[passportCount].sex = sex;
-        passports[passportCount].photograph =  photograph;
+
+        // Set personal details
+        PersonalDetails personalDetailsContractInstance = PersonalDetails(personalDetailsContract);
+        personalDetailsContractInstance.setPersonalDetails(passportCount, fullname, nationality, sex, photograph);
     }
 
     function changeOwner(address newOwner, uint256 _passportId) public onlyOwner(_passportId) {
@@ -101,34 +126,31 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
         return passports[_passportId].owner;
     }
 
-    function designateMaintenanceParty(uint256 _passportId, address _maintenanceParty , string memory _editableFields)
+    function designateMaintenanceParty(uint256 _passportId, address _maintenanceParty, string memory _editableFields)
         external
         onlyOwner(_passportId)
     {
         passports[_passportId].maintenanceParty = _maintenanceParty;
         passports[_passportId].editableFields = _editableFields;
     }
-
-        function designatecertifyingParty(uint256 _passportId, address _certifyingParty)
+             
+    function designateCertifyingParty(uint256 _passportId, address _certifyingParty)
         external
         onlyOwner(_passportId)
     {
         passports[_passportId].certifyingParty = _certifyingParty;
-        
     }
 
-    
- function performMaintenance(
+  function performMaintenance(
     uint256 _passportId,
     string memory _comments,
     string memory _passportname,
-    string memory _fullname, 
+    string memory _fullname,
     string memory _nationality,
     string memory _sex,
     string memory _photograph,
     uint256 _expirationDate
 ) external onlyMaintenanceParty(_passportId) {
-    
     Passport storage passport = passports[_passportId];
     passport.maintenancePerformed = true;
     passport.lastMaintenanceTimestamp = block.timestamp;
@@ -144,17 +166,17 @@ function getPassportDetails(uint256 _passportId) external view returns (Passport
     // Update passport data
     passport.name = _passportname;
     passport.expirationDate = _expirationDate;
-    passports[passportCount].fullname = _fullname;
-    passports[passportCount].nationality = _nationality;
-    passports[passportCount].sex = _sex;
-    passports[passportCount].photograph = _photograph;
+
+    // Update the personal details using the PersonalDetails contract
+    PersonalDetails personalDetailsContractInstance = PersonalDetails(personalDetailsContract);
+    personalDetailsContractInstance.setPersonalDetails(_passportId, _fullname, _nationality, _sex, _photograph);
 }
 
 
-function certifyObject(uint256 _passportId ,string memory _referenceDocument  ) external onlyCertifyingParty(_passportId) {
+
+    function certifyObject(uint256 _passportId, string memory _referenceDocument) external onlyCertifyingParty(_passportId) {
         passports[_passportId].certified = true;
         passports[_passportId].expirationDate = block.timestamp + 2 * 365 days;
         passports[_passportId].referenceDocument = _referenceDocument;
-
     }
 }

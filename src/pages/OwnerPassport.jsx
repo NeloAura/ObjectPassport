@@ -31,7 +31,7 @@ import { format, fromUnixTime } from "date-fns";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import QRCode from "../components/QRCode";
 
-const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
 
 const { ethers } = require("ethers");
@@ -62,12 +62,13 @@ const ObjectPassportCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
+        console.log(passports);
         setFilteredPassporst(
           passports.filter(
             (passport) =>
-              passport.owner.toLowerCase() ===
+            passport[0][0].toLowerCase() ===
                 userWalletAddress.toLowerCase() &&
-              passport.name.toLowerCase().includes(value.toLowerCase())
+                passport[0][3].toLowerCase().includes(value.toLowerCase())
           )
         );
 
@@ -156,7 +157,7 @@ const ObjectPassportCard = () => {
                   >
                     <CardHeader bg="blue.500" textAlign="center" py={2}>
                       <Text fontSize="20px" color="white" as="b">
-                        {passport.name}
+                        {passport[0][3]}
                       </Text>
                       <ButtonGroup display="flex" justifyContent="center">
                         <AssignPopoverForm
@@ -180,7 +181,7 @@ const ObjectPassportCard = () => {
                       </Center>
                       <p>
                         <Badge colorScheme="teal">Owner:</Badge>{" "}
-                        {passport.owner}
+                        {passport[0][0]}
                       </p>
                       <Box position="relative" padding="4">
                         <Divider />
@@ -192,11 +193,11 @@ const ObjectPassportCard = () => {
                         <Badge colorScheme="messenger">
                           Maintenance Party:
                         </Badge>
-                        {passport.maintenanceParty}
+                        {passport[0][1]}
                       </p>
                       <p>
                         <Badge colorScheme="twitter">Certifying Party:</Badge>{" "}
-                        {passport.certifyingParty}
+                        {passport[0][2]}
                       </p>
                       <Box position="relative" padding="4">
                         <Divider />
@@ -220,18 +221,18 @@ const ObjectPassportCard = () => {
                         <Badge colorScheme="orange">
                           Maintenance Performed:
                         </Badge>{" "}
-                        {passport.maintenancePerformed ? "✅" : "⛔"}
+                        {passport[0][9] ? "✅" : "⛔"}
                       </p>
                       <p>
                         <Badge colorScheme="whatsapp">Certified:</Badge>{" "}
-                        {passport.certified ? "✅" : "⛔"}
+                        {passport[0][10] ? "✅" : "⛔"}
                       </p>
 
-                      {passport.certified && (
+                      {passport[0][10] && (
                         <p>
                           <Badge colorScheme="red">Expiration-date:</Badge>{" "}
-                          {formatDateToISO(parseInt(passport.expirationDate))} -{" "}
-                          {formatDateToISO2(parseInt(passport.expirationDate))}
+                          {formatDateToISO(parseInt(passport[0][8]))} -{" "}
+                          {formatDateToISO2(parseInt(passport[0][8]))}
                         </p>
                       )}
                       <Box position="relative" padding="10">
@@ -246,9 +247,9 @@ const ObjectPassportCard = () => {
                         mt={1}
                       >
                         <History name={"History"} passport={passport} />
-                        {passport.certified && (
+                        {passport[0][10] && (
                           <a
-                            href={passport.referenceDocument}
+                            href={passport[0][5]}
                             target="_blank"
                             rel="noreferrer"
                           >

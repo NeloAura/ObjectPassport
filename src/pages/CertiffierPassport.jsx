@@ -35,7 +35,7 @@ import ipfs from "../components/utils/ipfsApi";
 import { format, fromUnixTime } from "date-fns";
 
 const { ethers } = require("ethers");
-const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
 
 const CertifierCard = () => {
@@ -74,10 +74,10 @@ const CertifierCard = () => {
         setFilteredPassporst(
           passports.filter(
             (passport) =>
-              passport.certifyingParty.toLowerCase() ===
+              passport[0][2].toLowerCase() ===
                 userWalletAddress.toLowerCase() &&
-              passport.owner.toLowerCase().includes(value.toLowerCase()) &&
-              (show || passport.certified === show)
+              passport[0][0].toLowerCase().includes(value.toLowerCase()) &&
+              (show || passport[0][10] === show)
           )
         );
         setLoading(false);
@@ -231,13 +231,13 @@ const CertifierCard = () => {
                     ml={"10px"}
                   >
                     <CardHeader
-                      bg={passport.certified ? "green.500" : "yellow.400"}
+                      bg={passport[0][10] ? "green.500" : "yellow.400"}
                       color="white"
                       textAlign="center"
                       py={2}
                       as="b"
                     >
-                      {passport.certified ? "Certified✔️" : "Pending🚧"}
+                      {passport[0][10] ? "Certified✔️" : "Pending🚧"}
                     </CardHeader>
                     <CardBody>
                     <Center>
@@ -258,7 +258,7 @@ const CertifierCard = () => {
                       </p>
                       <p>
                         <Badge colorScheme="twitter">Passport-name:</Badge>
-                        <Badge colorScheme="whatsapp">{passport.name}</Badge>
+                        <Badge colorScheme="whatsapp">{passport[0][3]}</Badge>
                       </p>
                       </VStack>
                       </Center>
@@ -270,7 +270,7 @@ const CertifierCard = () => {
                       </Box>
                       <p>
                         <Badge colorScheme="twitter">Owner:</Badge>{" "}
-                        {passport.owner}
+                        {passport[0][0]}
                       </p>
                       <p>
                         <Badge colorScheme="teal">Fullname:</Badge>{" "}
@@ -292,23 +292,23 @@ const CertifierCard = () => {
                       </Box>
                       <p>
                         <Badge colorScheme="facebook">Maintenance Party:</Badge>
-                        {passport.maintenanceParty}
+                        {passport[0][1]}
                       </p>
                       <p>
                     <Badge colorScheme="telegram">Justification:</Badge>{" "}
-                    <Text color="black" as={"kbd"}  >{passport.description}</Text>
+                    <Text color="black" as={"kbd"}  >{passport[0][4]}</Text>
                   </p>
-                  {passport.certified &&
+                  {passport[0][10] &&
                       <p>
                         <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}
                         <Badge>
-                        {formatDateToISO(parseInt(passport.expirationDate))} - {formatDateToISO2(parseInt(passport.expirationDate))}
+                        {formatDateToISO(parseInt(passport[0][8]))} - {formatDateToISO2(parseInt(passport[0][8]))}
                         </Badge>
                       </p>
                   }
                       <p>
                         <Badge colorScheme="green">Certified:</Badge>{" "}
-                        {passport.certified ? "✅" : "⛔"}
+                        {passport[0][10] ? "✅" : "⛔"}
                       </p>
                     </CardBody>
                     <CardFooter
@@ -318,7 +318,7 @@ const CertifierCard = () => {
                       justifyContent={"center"}
                     >
                     <VStack>
-                    {!passport.certified &&
+                    {!passport[0][10] &&
                       <InputGroup size="sm">
                         <InputLeftAddon
                           children="upload-certification-file"
@@ -331,11 +331,11 @@ const CertifierCard = () => {
                         />
                       </InputGroup>
                     }
-                    {!passport.certified &&
+                    {!passport[0][10] &&
                       <ButtonGroup>
                         <Button
                           colorScheme="blue"
-                          isDisabled={passport.certified}
+                          isDisabled={passport[0][10]}
                           onClick={() => {
                             handleCertifyClick(passport.id);
                           }}
@@ -344,9 +344,9 @@ const CertifierCard = () => {
                         </Button>
                       </ButtonGroup>
                     }
-                    {passport.certified &&
+                    {passport[0][10] &&
                     <ButtonGroup>
-                    <a href={passport.referenceDocument} target="_blank" rel="noreferrer" >
+                    <a href={passport[0][5]} target="_blank" rel="noreferrer" >
                   <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#b9c57a"}>Certification🤝✔️</Button>
                   </a>
                     </ButtonGroup>

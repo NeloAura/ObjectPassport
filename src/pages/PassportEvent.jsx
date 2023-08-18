@@ -28,7 +28,7 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 import { useParams } from "react-router-dom";
 
 
-const contractAddress = "0xA3C8fD22e44695c97d180d108F3945DceCeb70A6";
+const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const infuraApiKey = "d9e4d3de366746b88f8e6c91867018bd";
 const abi = ObjectPassportAbi.abi;
 
@@ -133,7 +133,7 @@ const PassportEvent = () => {
                 >
                   <CardHeader bg={gradient2} textAlign="center" py={2}>
                     <Text fontSize="20px" color="white" as="b">
-                      {passport.name}
+                      {passport[0][3]}
                     </Text>
                   </CardHeader>
                   <CardBody>
@@ -150,7 +150,7 @@ const PassportEvent = () => {
                       <Center>
                       <p display="flex" flex>
                         <Badge colorScheme="teal">Owner:</Badge>{" "}
-                        <Badge colorScheme="linkedin" >{passport.owner}</Badge>
+                        <Badge colorScheme="linkedin" >{passport[0][0]}</Badge>
                       </p>
                       </Center>
                       <Box position="relative" padding="7">
@@ -165,11 +165,11 @@ const PassportEvent = () => {
                         <Badge colorScheme="messenger">
                           Maintenance Party:
                         </Badge>{" "}
-                        <Badge colorScheme="yellow" >{passport.maintenanceParty}</Badge>
+                        <Badge colorScheme="yellow" >{passport[0][1]}</Badge>
                       </p>
                       <p>
                         <Badge colorScheme="messenger">Certifying Party:</Badge>{" "}
-                        <Badge colorScheme="yellow" >{passport.certifyingParty}</Badge>
+                        <Badge colorScheme="yellow" >{passport[0][2]}</Badge>
                       </p>
                       </VStack>
                       </Center>
@@ -198,18 +198,18 @@ const PassportEvent = () => {
                         <Badge colorScheme="orange">
                           Maintenance Performed:
                         </Badge>{" "}
-                        {passport.maintenancePerformed ? "✅" : "⛔"}
+                        {passport[0][9] ? "✅" : "⛔"}
                       </p>
                       <p>
                         <Badge colorScheme="whatsapp">Certified:</Badge>{" "}
-                        {passport.certified ? "✅" : "⛔"}
+                        {passport[0][10] ? "✅" : "⛔"}
                       </p>
 
-                      {passport.certified && (
+                      {passport[0][10] && (
                         <p>
                           <Badge colorScheme="red">Expiration-date:</Badge>{" "}
-                          <Badge colorScheme="messenger">{formatDateToISO(parseInt(passport.expirationDate))} -{" "}
-                          {formatDateToISO2(parseInt(passport.expirationDate))}</Badge>
+                          <Badge colorScheme="messenger">{formatDateToISO(parseInt(passport[0][8]))} -{" "}
+                          {formatDateToISO2(parseInt(passport[0][8]))}</Badge>
                         </p>
                       )}
                       </VStack>
@@ -222,9 +222,9 @@ const PassportEvent = () => {
                     </Box>
                     <ButtonGroup display="flex" justifyContent="center" mt={1}>
                       <History name={"History"} passport={passport} />
-                      {passport.certified &&
+                      {passport[0][10] &&
                    
-                    <a href={passport.referenceDocument} target="_blank" rel="noreferrer" >
+                    <a href={passport[0][5]} target="_blank" rel="noreferrer" >
                   <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#ffcc00"}>Certification✔️</Button>
                   </a>
                    

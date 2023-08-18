@@ -16,6 +16,10 @@ import {
   Stack,
   Heading,
   Image,
+  Divider,
+  Box,
+  AbsoluteCenter,
+  Center
 } from "@chakra-ui/react";
 
 function Abus() {
@@ -40,6 +44,22 @@ function Abus() {
           <ModalHeader>Who Are We?</ModalHeader>
           <ModalCloseButton />
           <ModalBody >
+
+          <Center bg='lightblue' h='100px' color='white'>
+          <Heading size='lg' fontSize='50px'>
+  AuraTeam
+</Heading>
+</Center>
+<Text fontSize='2xl'>
+Our group embarked on an exciting and challenging journey to create a decentralized application (DApp) centered around the concept of an "Object Passport." The project aimed to leverage blockchain technology to provide a unique digital identity for physical objects, enhancing their traceability, ownership history, and authenticity.
+Throughout this group project, our team was exposed to a dynamic blend of cutting-edge technologies, collaboration, and problem-solving. 
+</Text>
+          <Box position='relative' padding='10'>
+  <Divider />
+  <AbsoluteCenter bg='white' px='4'>
+    Meet our team!
+  </AbsoluteCenter>
+</Box>
           <SimpleGrid spacing={20} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>
           <Card maxW='lg'>
   <CardBody>
