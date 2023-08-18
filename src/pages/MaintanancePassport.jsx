@@ -105,6 +105,7 @@ const MaintenanceCard = () => {
 
   const captureFile = (eventvalue, event) => {
     setMPhotoValue(eventvalue);
+    console.log(mPhotoValue);
     event.preventDefault();
     const file = event.target.files[0];
 
@@ -333,7 +334,7 @@ const MaintenanceCard = () => {
                             />
                             <Input
                               type="file"
-                              defaultValue={mPhotoValue}
+                              defaultValue={passport.photograph}
                               onChange={(e) => captureFile(e.target.value, e)}
                               isDisabled={
                                 !editableFields.includes("photograph")
