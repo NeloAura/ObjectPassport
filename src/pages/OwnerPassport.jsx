@@ -62,7 +62,6 @@ const ObjectPassportCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
-        console.log(passports);
         setFilteredPassporst(
           passports.filter(
             (passport) =>

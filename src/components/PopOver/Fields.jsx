@@ -51,7 +51,7 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
       if (
         address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()
       ) {
-        // Check if the assigned address matches the current user's address
+       
         toast({
           title: "Cannot assign yourself as Maintenance",
           status: "error",
@@ -59,7 +59,7 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
           duration: 5000,
           isClosable: true,
         });
-        setAddress(""); // Clear the input field
+        setAddress(""); 
         return;
       }
       await requestAccount();
@@ -75,9 +75,9 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
       );
       await assignMaintenanceParty.wait();
       console.log("Maintenance party assigned successfully!");
-      setIsWaiting(false); // Reset waiting state
+      setIsWaiting(false);
 
-      // Show success toast
+      
       toast({
         title: `${formbutton} successful`,
         status: "success",
@@ -87,9 +87,9 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
       });
     } catch (error) {
       console.error("Error assigning maintenance party:", error);
-      // Handle error, e.g., show an error message to the user
+     
     } finally {
-      onCancel(); // Close the popover
+      onCancel(); 
     }
   };
 
@@ -98,13 +98,13 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
     const isChecked = event.target.checked;
 
     if (isChecked) {
-      // Add the field to the selected fields array
+    
       setSelectedFields((prevSelectedFields) => [
         ...prevSelectedFields,
         fieldName,
       ]);
     } else {
-      // Remove the field from the selected fields array
+      
       setSelectedFields((prevSelectedFields) =>
         prevSelectedFields.filter((field) => field !== fieldName)
       );
@@ -112,7 +112,7 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
   };
 
   const handleAssignClick = () => {
-    // Use the 'address' state variable instead of direct DOM access
+    
     const formattedEditableFields = selectedFields.join(", ");
 
     AssignFunction(formattedEditableFields);

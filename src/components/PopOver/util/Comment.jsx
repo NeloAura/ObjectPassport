@@ -34,6 +34,8 @@ const TextInput = React.forwardRef((props, ref) => {
 const CommentForm = ({
    button, 
    color,
+   photograph,
+   hasPhoto,
    checker, 
    id,
    name,
@@ -77,6 +79,8 @@ const CommentForm = ({
               fullname={fullname}
               nationality={nationality}
               gender={gender}
+              photograph={photograph}
+              hasPhoto={hasPhoto}
               buffer={buffer}
               useBuffer={useBuffer}
               expirationDate={expirationDate}
@@ -97,18 +101,19 @@ const Form = ({
   nationality,
   gender,
   buffer,
+  hasPhoto,
+  photograph,
   expirationDate }) => {
   const [comment, setComment] = useState("");
-  const [photograph, setPhotograph] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
+  const [isWaiting, setIsWaiting] = useState(false); 
   const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
   const abi = ObjectPassportAbi.abi;
-  const toast = useToast(); // Initialize the toast
+  const toast = useToast(); 
 
 
   const formatDateToTimestamp = (dateString) => {
     const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-    return parsedDate.getTime() / 1000; // Convert to Unix timestamp (seconds since epoch)
+    return parsedDate.getTime() / 1000; 
   };
 
   async function requestAccount() {
@@ -117,14 +122,19 @@ const Form = ({
 
   const EditFunction = async () => {
     try {
-      const result = await ipfs.add(buffer);
-      if (result) {
-      setPhotograph(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
       setIsWaiting(true); // Set waiting state
+  
+      let photo = photograph;
+  
+      if (buffer) {
+        const result = await ipfs.add(buffer);
+        photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
+      }
+  
       const assignMaintenanceParty = await contract.performMaintenance(
         id,
         comment,
@@ -132,27 +142,28 @@ const Form = ({
         fullname,
         nationality,
         gender,
-        photograph, 
+        photo,
         formatDateToTimestamp(expirationDate)
       );
       await assignMaintenanceParty.wait();
-      console.log("Maintenance party assigned successfully!");
-      setIsWaiting(false); // Reset waiting state
-
-      // Show success toast
+      console.log("Maintenance Performed Successfully!");
+      setIsWaiting(false);
+  
       toast({
         title: "Edit successful",
         status: "success",
-        position:"top-right",
+        position: "top-right",
         duration: 5000,
         isClosable: true,
       });
-    }} catch (error) {
+    } catch (error) {
       console.error("Error editing:", error);
     } finally {
-      onCancel(); // Close the popover
+      onCancel();
     }
   };
+  
+  
 
   const handleEditClick = () => {
     EditFunction();

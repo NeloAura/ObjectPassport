@@ -54,9 +54,9 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
     const formattedAddress = ethers.utils.getAddress(address);
 
     if (formbutton === 'Assign') {
-      // Check if the address matches the user's address
+      
       if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
-        // Show error toast
+        
         toast({
           title: "Cannot assign yourself as Certifier",
           status: "error",
@@ -64,19 +64,19 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
           duration: 5000,
           isClosable: true,
         });
-        // Clear the input field
+        
         setAddress("");
-        return; // Return without performing the assignment
+        return; 
       }
       
-      // Perform the assignment
-      setIsWaiting(true); // Set waiting state
+     
+      setIsWaiting(true);
       const assigncertifyingParty = await contract.designateCertifyingParty(id, formattedAddress);
       await assigncertifyingParty.wait();
       console.log("Passport assigned successfully!");
-      setIsWaiting(false); // Reset waiting state
+      setIsWaiting(false); 
     } else if (formbutton === 'Transfer') {
-      // Check if the address matches the current owner's address
+      
       
       if (address.toLowerCase() === window.ethereum.selectedAddress.toLowerCase()) {
         // Show error toast
@@ -87,22 +87,22 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
           duration: 5000,
           isClosable: true,
         });
-        // Clear the input field
+        
         setAddress("");
-        return; // Return without performing the transfer
+        return; 
       }
       
-      // Perform the transfer
-      setIsWaiting(true); // Set waiting state
+      
+      setIsWaiting(true); 
       const transferPassport = await contract.changeOwner(formattedAddress, id);
       await transferPassport.wait();
       console.log("Passport transferred successfully!");
-      setIsWaiting(false); // Reset waiting state
+      setIsWaiting(false); 
     } else {
       console.warn("Unknown form button:", formbutton);
     }
 
-    // Show success toast
+    
     toast({
       title: `${formbutton} successful`,
       status: "success",
@@ -113,7 +113,7 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
   } catch (error) {
     console.error("Error transferring/passport:", error);
   } finally {
-    onCancel(); // Close the popover
+    onCancel(); 
   }
 };
 

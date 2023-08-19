@@ -30,7 +30,7 @@ const formatDateToISO = (timestamp) => {
 };
 
 const HistoryContent = ({ passport }) => {
-  const maintenanceHistory = passport.maintenanceHistory || [];
+  const maintenanceHistory = passport[0][11] || [];
 
   if (maintenanceHistory.length === 0) {
     return (

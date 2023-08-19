@@ -40,8 +40,6 @@ const abi = ObjectPassportAbi.abi;
 
 const CertifierCard = () => {
   const [passports, setPassports] = useState([]);
-  const [referenceDocument, setReferenceDocument] = useState("");
-  const [referenceDocumentValue, setReferenceDocumentValue] = useState("");
   const [buffer, setBuffer] = useState(null);
   const toast = useToast(); // Initialize the toast
   const [filteredPassports, setFilteredPassporst] = useState([]);
@@ -90,8 +88,7 @@ const CertifierCard = () => {
     fetchPassports();
   }, [passports, userWalletAddress, value, show]);
 
-  const captureFile = (eventvalue,event) => {
-    setReferenceDocumentValue(eventvalue);
+  const captureFile = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
     
@@ -129,13 +126,13 @@ const CertifierCard = () => {
       const result = await ipfs.add(buffer);
       if (result) {
       console.log('=== result ===', result);
-      setReferenceDocument(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
+      const document = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       setWaiting(true);
       const contract = new ethers.Contract(contractAddress, abi, signer);
-      const certify = await contract.certifyObject(id ,referenceDocument);
+      const certify = await contract.certifyObject(id ,document);
       await certify.wait();
 
       toast({
@@ -326,7 +323,6 @@ const CertifierCard = () => {
                         />
                         <Input
                           type="file"
-                          defaultValue={passport.referenceDocument}
                           onChange={(e) => captureFile(e.target.value , e)}
                         />
                       </InputGroup>

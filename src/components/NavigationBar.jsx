@@ -57,14 +57,11 @@ const Form = ({ firstFieldRef, onCancel }) => {
   const [nationality, setNationalilty] = useState("");
   const [gender, setGender] = useState("");
   const [fullName, setFullName] = useState("");
-  const [photoValue, setPhotoValue] =useState("");
-  const [photograph, setPhotograph] = useState("");
   const [buffer, setBuffer] = useState(null);
   const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
   const toast = useToast(); // Initialize the toast
 
-  const captureFile = (eventvalue ,event) => {
-    setPhotoValue(eventvalue);
+  const captureFile = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
     
@@ -86,38 +83,55 @@ const Form = ({ firstFieldRef, onCancel }) => {
 
   const createPassport = async () => {
     try {
+      // Check if any of the required fields are null
+      if (!name || !fullName || !nationality || !gender || !description || !buffer) {
+        toast({
+          title: "Please fill all the fields",
+          status: "warning",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+        return; // Don't proceed if any field is null
+      }
+  
       const result = await ipfs.add(buffer);
       if (result) {
-      setPhotograph(`https://ap.infura-ipfs.io/ipfs/${result.path}`)
-      const photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`
-      await requestAccount();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
-      setIsWaiting(true); // Set waiting state
-      console.log(photograph);
-      const create = await contract.createPassport(name, fullName, description,nationality,gender,photo);
-      await create.wait();
-      console.log("Passport created successfully!");
-      setIsWaiting(false); // Reset waiting state
-
-      // Show success toast
-      toast({
-        title: "Passport created successfully",
-        status: "success",
-        position:"top-right",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
+        const photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`
+        await requestAccount();
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        setIsWaiting(true);
+        const create = await contract.createPassport(
+          name,
+          fullName,
+          description,
+          nationality,
+          gender,
+          photo
+        );
+        await create.wait();
+        console.log("Passport created successfully!");
+        setIsWaiting(false);
+  
+        // Show success toast
+        toast({
+          title: "Passport created successfully",
+          status: "success",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.error("Error creating passport:", error);
       // Handle error, e.g., show an error message to the user
     } finally {
       onCancel(); // Close the popover
     }
-  
   };
+  
 
   const handleCreateClick = () => {
     createPassport();
@@ -176,8 +190,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
       <Input
         type="file"
         id="photograph"
-        defaultValue={photoValue}
-        onChange={(e) => captureFile(e.target.value , e)}
+        onChange={(e) => captureFile(e)}
       />
       <ButtonGroup display="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>

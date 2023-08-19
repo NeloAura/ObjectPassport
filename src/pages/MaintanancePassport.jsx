@@ -57,11 +57,12 @@ const MaintenanceCard = () => {
   const [nationality, setNationality] = useState("");
   const [gender, setGender] = useState("");
   const [fullName, setFullName] = useState("");
-  const [mPhotoValue, setMPhotoValue] = useState("");
   const [buffer, setBuffer] = useState(null);
   const [expirationDate, setExpirationDate] = useState("");
   const [value, setValue] = React.useState("");
   const [show, setShow] = React.useState(true);
+  const [hasPhoto, setHasPhoto] = React.useState(false);
+  const photograph = "";
 
   useEffect(() => {
     const fetchPassports = async () => {
@@ -83,7 +84,6 @@ const MaintenanceCard = () => {
 
         // Update the state with fetched passports
         setPassports(fetchedPassports);
-        console.log(passports);
         setFilteredPassporst(
           passports.filter(
             (passport) =>
@@ -103,9 +103,7 @@ const MaintenanceCard = () => {
     fetchPassports();
   }, [passports, userWalletAddress, value, show]);
 
-  const captureFile = (eventvalue, event) => {
-    setMPhotoValue(eventvalue);
-    console.log(mPhotoValue);
+  const captureFile = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
 
@@ -116,6 +114,7 @@ const MaintenanceCard = () => {
     reader.onloadend = () => {
       console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
+      setHasPhoto(true);
     };
   };
   const formatDateToISO = (timestamp) => {
@@ -334,8 +333,7 @@ const MaintenanceCard = () => {
                             />
                             <Input
                               type="file"
-                              defaultValue={passport.photograph}
-                              onChange={(e) => captureFile(e.target.value, e)}
+                              onChange={(e) => captureFile( e)}
                               isDisabled={
                                 !editableFields.includes("photograph")
                               }
@@ -418,6 +416,8 @@ const MaintenanceCard = () => {
                                 : formatDateToISO(parseInt(passport[0][8]))
                             }
                             checker={passport[0][10]}
+                            photograph={photograph !== "" ? photograph : passport.photograph}
+                            hasPhoto={hasPhoto}
                           />
                         )}
                       </CardFooter>
