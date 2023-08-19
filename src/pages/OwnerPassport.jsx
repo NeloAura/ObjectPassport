@@ -31,7 +31,7 @@ import { format, fromUnixTime } from "date-fns";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import QRCode from "../components/QRCode";
 
-const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
 
 const { ethers } = require("ethers");
@@ -65,9 +65,9 @@ const ObjectPassportCard = () => {
         setFilteredPassporst(
           passports.filter(
             (passport) =>
-            passport[0][0].toLowerCase() ===
+              passport[0][0].toLowerCase() ===
                 userWalletAddress.toLowerCase() &&
-                passport[0][3].toLowerCase().includes(value.toLowerCase())
+              passport[0][3].toLowerCase().includes(value.toLowerCase())
           )
         );
 
@@ -113,7 +113,7 @@ const ObjectPassportCard = () => {
           backgroundPosition="center"
           backgroundRepeat="repeat"
         >
-          <Wrap spacing={4} justify="center">
+          <Wrap spacing={4} justify="center" flexWrap="wrap">
             {loading ? (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
                 <Spinner
@@ -143,16 +143,15 @@ const ObjectPassportCard = () => {
               </Center>
             ) : (
               filteredPassports.map((passport) => (
-                <WrapItem key={passport.id}>
+                <WrapItem key={passport.id} flex="1">
                   <Card
                     key={passport.id}
                     boxShadow="md"
                     borderRadius="md"
-                    w="550px"
-                    h="710px"
                     mb={10}
                     mt="10px"
-                    ml={"10px"}
+                    mx={2} // Adjust margin between cards
+                    flex="1" // Allow cards to grow to fill the available space
                   >
                     <CardHeader bg="blue.500" textAlign="center" py={2}>
                       <Text fontSize="20px" color="white" as="b">

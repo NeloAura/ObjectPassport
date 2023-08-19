@@ -252,7 +252,7 @@ const VerticalNavigationBar = () => {
   return (
     <VStack
       spacing={4}
-      p={4}
+      p={3}
       bg={gradient}
       position="static"
       left={0}

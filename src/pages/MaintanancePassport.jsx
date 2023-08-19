@@ -160,7 +160,7 @@ const MaintenanceCard = () => {
           backgroundPosition="center"
           backgroundRepeat="repeat"
         >
-          <Wrap spacing={4} justify="center">
+          <Wrap spacing={4} justify="center" flexWrap="wrap">
             {loading ? (
               <Center flexGrow={1} alignItems="center" justifyContent="center">
                 <Spinner
@@ -197,16 +197,16 @@ const MaintenanceCard = () => {
                     ? ""
                     : formatDateToISO2(timestamp);
                 return (
-                  <WrapItem key={passport.id}>
+                  <WrapItem key={passport.id} >
                     <Card
                       key={passport.id}
                       boxShadow="md"
                       borderRadius="md"
-                      w="500px"
+                      w="490px"
                       h="700px"
-                      mb={4}
+                      mb={7}
                       mt="10px"
-                      ml={"10px"}
+                     
                     >
                       <CardHeader
                         bg="#01aece"
