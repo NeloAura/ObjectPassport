@@ -23,7 +23,7 @@ function CVertStepper() {
     const steps = [
       {
         name: 'step 1',
-        title: 'Use the certify button to view passports assigned to you for certification.',
+        title: 'View passports assigned to you',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
@@ -39,7 +39,7 @@ function CVertStepper() {
       },
       {
         name: 'step 2',
-        title: 'Use the button to filter between already certified passports and those awaiting certification',
+        title: 'Certify the passport',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}

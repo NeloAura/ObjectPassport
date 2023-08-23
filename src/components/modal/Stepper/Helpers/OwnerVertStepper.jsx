@@ -26,7 +26,7 @@ function OVertStepper() {
     const steps = [
       {
         name: 'step 1',
-        title: 'Use the + button to create a new passport',
+        title: 'Creating a new passport',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
@@ -42,7 +42,7 @@ function OVertStepper() {
       },
       {
         name: 'step 2',
-        title: 'Accept transaction in your metamask',
+        title: 'Assigning a certifying party',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
@@ -64,7 +64,7 @@ function OVertStepper() {
       },
       {
         name: 'step 3',
-        title: 'Find your new passport in MyPassports page',
+        title: 'Assigning a maintenance party',
         children: (
           <>
             <Box ml={"40px"} py="4"><img src={card} alt="loading..." /></Box>

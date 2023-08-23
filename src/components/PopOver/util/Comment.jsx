@@ -101,7 +101,6 @@ const Form = ({
   nationality,
   gender,
   buffer,
-  hasPhoto,
   photograph,
   expirationDate }) => {
   const [comment, setComment] = useState("");
@@ -134,6 +133,8 @@ const Form = ({
         const result = await ipfs.add(buffer);
         photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
       }
+
+      
   
       const assignMaintenanceParty = await contract.performMaintenance(
         id,

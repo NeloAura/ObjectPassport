@@ -189,6 +189,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
       <FormLabel htmlFor={`photograph`}> Upload Photograph</FormLabel>
       <Input
         type="file"
+        accept =".png , .jpg , .jpeg"
         id="photograph"
         onChange={(e) => captureFile(e)}
       />

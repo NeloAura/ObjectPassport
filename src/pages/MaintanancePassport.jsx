@@ -333,6 +333,7 @@ const MaintenanceCard = () => {
                             />
                             <Input
                               type="file"
+                              accept =".png , .jpg , .jpeg"
                               onChange={(e) => captureFile( e)}
                               isDisabled={
                                 !editableFields.includes("photograph")

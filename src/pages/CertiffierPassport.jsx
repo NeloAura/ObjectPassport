@@ -154,6 +154,16 @@ const CertifierCard = () => {
   };
 
   const handleCertifyClick = (id) => {
+    if(buffer === null){
+      toast({
+        title: "Please Upload Certification File",
+        status: "error",
+        position: "top-right",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     Certify(id);
   };
 
@@ -323,7 +333,8 @@ const CertifierCard = () => {
                         />
                         <Input
                           type="file"
-                          onChange={(e) => captureFile(e.target.value , e)}
+                          accept =".pdf"
+                          onChange={(e) => captureFile(e)}
                         />
                       </InputGroup>
                     }
