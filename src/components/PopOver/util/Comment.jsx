@@ -17,11 +17,15 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import FocusLock from "react-focus-lock";
+import CryptoJS from "crypto-js";
 import ipfs from "../../utils/ipfsApi";
 import { parse } from "date-fns";
 import ObjectPassportAbi from "../../../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
+
 const { ethers } = require("ethers");
+const key = "APAT!";
+
 const TextInput = React.forwardRef((props, ref) => {
   return (
     <FormControl>
@@ -134,13 +138,16 @@ const Form = ({
         photo = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
       }
 
-      
+      const fullNameHash = CryptoJS.AES.encrypt(
+        fullname,
+        key
+      ).toString();
   
       const assignMaintenanceParty = await contract.performMaintenance(
         id,
         comment,
         name,
-        fullname,
+        fullNameHash,
         nationality,
         gender,
         photo,

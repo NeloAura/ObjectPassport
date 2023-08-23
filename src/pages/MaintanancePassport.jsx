@@ -31,6 +31,7 @@ import VerticalNavigationBar from "../components/NavigationBar";
 import CommentForm from "../components/PopOver/util/Comment";
 import History from "../components/modal/History";
 import { SearchInput } from "@saas-ui/react";
+import CryptoJS from "crypto-js";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { format, fromUnixTime } from "date-fns";
 import Image1 from "../assets/images/SPL.png";
@@ -43,6 +44,7 @@ const { ethers } = require("ethers");
 
 const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
+const key = "APAT!";
 
 const MaintenanceCard = () => {
   const theme = extendTheme({
@@ -283,7 +285,9 @@ const MaintenanceCard = () => {
                           <InputGroup size="sm">
                             <InputLeftAddon children="full-name" bg="#68bfff" />
                             <Input
-                              defaultValue={passport.fullname}
+                              defaultValue= {CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                               onChange={(e) => setFullName(e.target.value)}
                               isDisabled={!editableFields.includes("fullname")}
                             />
@@ -401,7 +405,9 @@ const MaintenanceCard = () => {
                             id={passport.id}
                             name={name !== "" ? name : passport[0][3]}
                             fullname={
-                              fullName !== "" ? fullName : passport.fullname
+                              fullName !== "" ? fullName :  CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                          CryptoJS.enc.Utf8
+                        )
                             }
                             nationality={
                               nationality !== ""

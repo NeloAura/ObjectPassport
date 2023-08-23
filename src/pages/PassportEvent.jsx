@@ -23,6 +23,7 @@ import {
 import { ExternalLinkIcon} from '@chakra-ui/icons'
 import History from "../components/modal/History";
 import Image1 from "../assets/images/SPL.png";
+import CryptoJS from "crypto-js";
 import { format, fromUnixTime } from "date-fns";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { useParams } from "react-router-dom";
@@ -31,6 +32,7 @@ import { useParams } from "react-router-dom";
 const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const infuraApiKey = "d9e4d3de366746b88f8e6c91867018bd";
 const abi = ObjectPassportAbi.abi;
+const key = "APAT!";
 
 const { ethers } = require("ethers");
 
@@ -183,7 +185,9 @@ const PassportEvent = () => {
                       <VStack>
                       <p>
                         <Badge colorScheme="teal">Fullname:</Badge>{" "}
-                        <Badge colorScheme="gray" >{passport.fullname}</Badge>
+                        <Badge colorScheme="gray" > {CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}</Badge>
                       </p>
                       <p>
                         <Badge colorScheme="purple">Nationality:</Badge>{" "}

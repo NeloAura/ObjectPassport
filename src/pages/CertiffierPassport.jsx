@@ -26,17 +26,19 @@ import {
   extendTheme,
   VStack,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon} from '@chakra-ui/icons'
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 import { SearchInput } from "@saas-ui/react";
+import CryptoJS from "crypto-js";
 import { Buffer } from "buffer";
 import Image1 from "../assets/images/SPL.png";
 import ipfs from "../components/utils/ipfsApi";
 import { format, fromUnixTime } from "date-fns";
 
 const { ethers } = require("ethers");
-const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
+const key = "APAT!";
 
 const CertifierCard = () => {
   const [passports, setPassports] = useState([]);
@@ -91,15 +93,14 @@ const CertifierCard = () => {
   const captureFile = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
-    
+
     const reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);  // Read buffered file
+    reader.readAsArrayBuffer(file); // Read buffered file
 
     // Callback
     reader.onloadend = () => {
       console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
-      
     };
   };
 
@@ -125,26 +126,27 @@ const CertifierCard = () => {
     try {
       const result = await ipfs.add(buffer);
       if (result) {
-      console.log('=== result ===', result);
-      const document = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
-      await requestAccount();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      setWaiting(true);
-      const contract = new ethers.Contract(contractAddress, abi, signer);
-      const certify = await contract.certifyObject(id ,document);
-      await certify.wait();
+        console.log("=== result ===", result);
+        const document = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
+        await requestAccount();
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        setWaiting(true);
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const certify = await contract.certifyObject(id, document);
+        await certify.wait();
 
-      toast({
-        title: "Certification successfull",
-        status: "success",
-        position: "top-right",
-        duration: 5000,
-        isClosable: true,
-      });
-      console.log("Certification successfull!");
-      // You can handle the success message and any other necessary actions here
-    }} catch (error) {
+        toast({
+          title: "Certification successfull",
+          status: "success",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.log("Certification successfull!");
+        // You can handle the success message and any other necessary actions here
+      }
+    } catch (error) {
       console.error("Error Certifying:", error);
 
       // Handle error, e.g., show an error message to the user
@@ -154,7 +156,7 @@ const CertifierCard = () => {
   };
 
   const handleCertifyClick = (id) => {
-    if(buffer === null){
+    if (buffer === null) {
       toast({
         title: "Please Upload Certification File",
         status: "error",
@@ -247,29 +249,31 @@ const CertifierCard = () => {
                       {passport[0][10] ? "Certified✔️" : "Pending🚧"}
                     </CardHeader>
                     <CardBody>
-                    <Center>
-                      <Image
-                        mb={"5"}
-                        boxSize="100px"
-                        objectFit="cover"
-                        src={passport.photograph}
-                        alt="Profile"
-                        fallbackSrc='https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878'
-                      />
+                      <Center>
+                        <Image
+                          mb={"5"}
+                          boxSize="100px"
+                          objectFit="cover"
+                          src={passport.photograph}
+                          alt="Profile"
+                          fallbackSrc="https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
+                        />
                       </Center>
                       <Center>
-                      <VStack>
-                      <p>
-                        <Badge colorScheme="orange">ID:</Badge>{" "}
-                        <Badge>{passport.id}</Badge>
-                      </p>
-                      <p>
-                        <Badge colorScheme="twitter">Passport-name:</Badge>
-                        <Badge colorScheme="whatsapp">{passport[0][3]}</Badge>
-                      </p>
-                      </VStack>
+                        <VStack>
+                          <p>
+                            <Badge colorScheme="orange">ID:</Badge>{" "}
+                            <Badge>{passport.id}</Badge>
+                          </p>
+                          <p>
+                            <Badge colorScheme="twitter">Passport-name:</Badge>
+                            <Badge colorScheme="whatsapp">
+                              {passport[0][3]}
+                            </Badge>
+                          </p>
+                        </VStack>
                       </Center>
-                      <Box   position="relative" padding="5">
+                      <Box position="relative" padding="5">
                         <Divider />
                         <AbsoluteCenter as={"b"} px="2">
                           Personal Data
@@ -281,17 +285,18 @@ const CertifierCard = () => {
                       </p>
                       <p>
                         <Badge colorScheme="teal">Fullname:</Badge>{" "}
-                        {passport.fullname}
+                        {CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                       </p>
                       <p>
                         <Badge colorScheme="purple">Nationality:</Badge>{" "}
                         {passport.nationality}
                       </p>
                       <p>
-                        <Badge colorScheme="purple">Sex:</Badge>{" "}
-                        {passport.sex}
+                        <Badge colorScheme="purple">Sex:</Badge> {passport.sex}
                       </p>
-                      <Box   position="relative" padding="5">
+                      <Box position="relative" padding="5">
                         <Divider />
                         <AbsoluteCenter as={"b"} px="2">
                           Details
@@ -302,17 +307,20 @@ const CertifierCard = () => {
                         {passport[0][1]}
                       </p>
                       <p>
-                    <Badge colorScheme="telegram">Justification:</Badge>{" "}
-                    <Text color="black" as={"kbd"}  >{passport[0][4]}</Text>
-                  </p>
-                  {passport[0][10] &&
-                      <p>
-                        <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}
-                        <Badge>
-                        {formatDateToISO(parseInt(passport[0][8]))} - {formatDateToISO2(parseInt(passport[0][8]))}
-                        </Badge>
+                        <Badge colorScheme="telegram">Justification:</Badge>{" "}
+                        <Text color="black" as={"kbd"}>
+                          {passport[0][4]}
+                        </Text>
                       </p>
-                  }
+                      {passport[0][10] && (
+                        <p>
+                          <Badge colorScheme="pink">Expiration-Date:</Badge>{" "}
+                          <Badge>
+                            {formatDateToISO(parseInt(passport[0][8]))} -{" "}
+                            {formatDateToISO2(parseInt(passport[0][8]))}
+                          </Badge>
+                        </p>
+                      )}
                       <p>
                         <Badge colorScheme="green">Certified:</Badge>{" "}
                         {passport[0][10] ? "✅" : "⛔"}
@@ -324,40 +332,49 @@ const CertifierCard = () => {
                       py={2}
                       justifyContent={"center"}
                     >
-                    <VStack>
-                    {!passport[0][10] &&
-                      <InputGroup size="sm">
-                        <InputLeftAddon
-                          children="upload-certification-file"
-                          bg="#6895ff"
-                        />
-                        <Input
-                          type="file"
-                          accept =".pdf"
-                          onChange={(e) => captureFile(e)}
-                        />
-                      </InputGroup>
-                    }
-                    {!passport[0][10] &&
-                      <ButtonGroup>
-                        <Button
-                          colorScheme="blue"
-                          isDisabled={passport[0][10]}
-                          onClick={() => {
-                            handleCertifyClick(passport.id);
-                          }}
-                        >
-                          Mark Certified
-                        </Button>
-                      </ButtonGroup>
-                    }
-                    {passport[0][10] &&
-                    <ButtonGroup>
-                    <a href={passport[0][5]} target="_blank" rel="noreferrer" >
-                  <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#b9c57a"}>Certification🤝✔️</Button>
-                  </a>
-                    </ButtonGroup>
-                    }
+                      <VStack>
+                        {!passport[0][10] && (
+                          <InputGroup size="sm">
+                            <InputLeftAddon
+                              children="upload-certification-file"
+                              bg="#6895ff"
+                            />
+                            <Input
+                              type="file"
+                              accept=".pdf"
+                              onChange={(e) => captureFile(e)}
+                            />
+                          </InputGroup>
+                        )}
+                        {!passport[0][10] && (
+                          <ButtonGroup>
+                            <Button
+                              colorScheme="blue"
+                              isDisabled={passport[0][10]}
+                              onClick={() => {
+                                handleCertifyClick(passport.id);
+                              }}
+                            >
+                              Mark Certified
+                            </Button>
+                          </ButtonGroup>
+                        )}
+                        {passport[0][10] && (
+                          <ButtonGroup>
+                            <a
+                              href={passport[0][5]}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <Button
+                                rightIcon={<ExternalLinkIcon />}
+                                bgColor={"#b9c57a"}
+                              >
+                                Certification🤝✔️
+                              </Button>
+                            </a>
+                          </ButtonGroup>
+                        )}
                       </VStack>
                     </CardFooter>
                   </Card>

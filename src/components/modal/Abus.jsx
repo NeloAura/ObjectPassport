@@ -26,6 +26,7 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Felix from "../../assets/images/about/Jeanello-Profile.JPG";
 import Maximo from "../../assets/images/about/Eldrickson.jpg";
 import Danny from "../../assets/images/about/Danny.jpg";
+import UoC from "../../assets/images/about/UOC.png";
 
 function Abus() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -87,11 +88,13 @@ function Abus() {
                 <CardBody>
                   <Image
                     src={Felix}
-                    alt="Green double couch with wooden legs"
+                    alt="Felix"
                     borderRadius="lg"
+                    boxSize={"sm"}
                   />
                   <Stack mt="6" spacing="3">
-                    <Heading size="md">Felix</Heading>
+                    <Heading size="md">Felix<Link href="www.linkedin.com/in/jeanello-haddocks-9a34b6192" isExternal color={"#272a92"}><ExternalLinkIcon mx="2px" />
+                    </Link></Heading>
                     <Text>Developer</Text>
                     <Text>
                       As a Frontend DApp Engineer, I merge technology and user
@@ -106,9 +109,10 @@ function Abus() {
               </Card>
               <Card maxW="lg">
                 <CardBody>
-                  <Image src={Maximo} alt="Maximo" borderRadius="lg" />
+                  <Image src={Maximo} alt="Maximo" borderRadius="lg" boxSize={"sm"} />
                   <Stack mt="6" spacing="3">
-                    <Heading size="md">Maximo</Heading>
+                    <Heading size="md">Maximo <Link href="https://www.linkedin.com/in/eldrickson-sommer-164975208/" isExternal color={"#272a92"}><ExternalLinkIcon mx="2px" />
+                    </Link></Heading>
                     <Text>Developer</Text>
                     <Text>
                       As a Blockchain DApp Developer, I design, code, and deploy
@@ -124,9 +128,10 @@ function Abus() {
               </Card>
               <Card maxW="lg">
                 <CardBody>
-                  <Image src={Danny} alt="Danny" borderRadius="lg" />
+                  <Image src={Danny} alt="Danny" borderRadius="lg" boxSize={"sm"} />
                   <Stack mt="6" spacing="3">
-                    <Heading size="md">Danny</Heading>
+                    <Heading size="md">Danny <Link href="https://www.linkedin.com/in/daniel-murillo-casta%C3%B1o-b036201b9/" isExternal color={"#272a92"}><ExternalLinkIcon mx="2px" />
+                    </Link></Heading>
                     <Text>Developer</Text>
                     <Text>
                       As a Smart Contract Developer, I create robust and secure
@@ -157,9 +162,7 @@ function Abus() {
                   <Center>
                     <Image
                       boxSize={"xl"}
-                      src={
-                        "https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
-                      }
+                      src={UoC}
                       alt="UOC"
                       borderRadius="lg"
                     />
@@ -272,6 +275,7 @@ function Abus() {
               <Card maxW="lg">
                 <CardBody>
                   <Image
+                    boxSize={"sm"}
                     src={"https://chakra-ui.com/og-image.png"}
                     alt="Chakra"
                     borderRadius="lg"
@@ -296,6 +300,7 @@ function Abus() {
                     src={
                       "https://assets-global.website-files.com/6364e65656ab107e465325d2/6381641b6a60932fb3c3c2d9_crsLQ2lVok-0X37hZ_7RSl62vTm5GRP0Ws4xyPt4E5I.jpeg"
                     }
+                    boxSize={"sm"}
                     alt="Hardhat"
                     borderRadius="lg"
                   />
@@ -320,6 +325,7 @@ function Abus() {
                     src={
                       "https://uploads-ssl.webflow.com/6433e6f821ae13dd37394322/64393ec631a32b4da0ee030c_ethersjs.png"
                     }
+                    boxSize={"sm"}
                     alt="ethers"
                     borderRadius="lg"
                   />

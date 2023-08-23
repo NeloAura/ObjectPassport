@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   Button,
   Tag,
+  useToast,
   ChakraProvider
 
 } from '@chakra-ui/react';
@@ -20,6 +21,7 @@ import QRScanner from '../components/modal/QRScanner';
 function AuraPassportPage() {
   const [walletAddress, setWalletAddress] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const toast = useToast()
   const navigate = useNavigate();
 
   const handleConnect = async () => {
@@ -33,15 +35,33 @@ function AuraPassportPage() {
           setIsLoggedIn(true);
         }
       } else {
-        alert("Metamask not detected. Please install Metamask extension to connect.");
+        toast({
+          position:"top-right",
+          title: 'Metamask not detected 😢',
+          description: "Please follow instructions on How it Works Page ",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
       }
     } catch (error) {
       console.error('Error connecting to Metamask:', error);
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = () => {toast({
+    position:"top-right",
+    title: 'Login Successfull😀',
+    description: "Redirecting...💨 ",
+    status: 'success',
+    duration: 3000,
+    isClosable: true,
+  })
+  setTimeout(()=>{
     navigate('/o'); 
+  }, 3000)
+
+    
   };
 
   return (

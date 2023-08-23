@@ -30,7 +30,7 @@ contract ObjectPassport {
     mapping(address => uint256[]) public passportsByOwner;
     mapping(uint256 => mapping(address => bool)) public editableFields;
     uint256 public passportCount;
-    address public personalDetailsContract; // Address of PersonalDetails contract
+    address public personalDetailsContract; 
 
     event OwnerSet(address indexed oldOwner, address indexed newOwner);
 

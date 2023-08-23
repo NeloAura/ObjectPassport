@@ -38,7 +38,7 @@ function Explained() {
           backdropFilter="blur(10px) "
         />
         <ModalContent>
-          <ModalHeader color={"white"} bg="#0280a6" as={"b"}>How to Work with The Passport?</ModalHeader>
+          <ModalHeader color={"white"} bg="#0280a6" as={"b"}>How to Work with AP💖?</ModalHeader>
           <ModalCloseButton />
           <ModalBody bg={gradient} >
           

@@ -20,6 +20,7 @@ import {
   WrapItem,
   Image,
 } from "@chakra-ui/react";
+import CryptoJS from "crypto-js";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import VerticalNavigationBar from "../components/NavigationBar";
 import AssignPopoverForm from "../components/PopOver/AssignPopOver";
@@ -33,6 +34,7 @@ import QRCode from "../components/QRCode";
 
 const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
+const key = "APAT!";
 
 const { ethers } = require("ethers");
 const ObjectPassportCard = () => {
@@ -205,7 +207,9 @@ const ObjectPassportCard = () => {
                       </Box>
                       <p>
                         <Badge colorScheme="teal">Fullname:</Badge>{" "}
-                        {passport.fullname}
+                        {CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                       </p>
                       <p>
                         <Badge colorScheme="purple">Nationality:</Badge>{" "}

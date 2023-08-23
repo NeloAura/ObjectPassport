@@ -29,6 +29,7 @@ import {
 } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from "crypto-js";
 import { Buffer } from "buffer";
 import { nationalities, genders } from "./PopOver/util/Nationalities";
 import ipfs from "./utils/ipfsApi";
@@ -37,6 +38,7 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 const { ethers } = require("ethers");
 const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
 const abi = ObjectPassportAbi.abi;
+const key = "APAT!";
 
 async function requestAccount() {
   await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -103,9 +105,16 @@ const Form = ({ firstFieldRef, onCancel }) => {
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
         setIsWaiting(true);
+
+        //Hash all the parameters    
+        const fullNameHash = CryptoJS.AES.encrypt(
+          fullName,
+          key
+        ).toString();
+        
         const create = await contract.createPassport(
           name,
-          fullName,
+          fullNameHash,
           description,
           nationality,
           gender,
