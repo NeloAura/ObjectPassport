@@ -21,8 +21,12 @@ import {
 } from "@chakra-ui/react";
 import { InfoOutlineIcon, DownloadIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
+import CryptoJS from "crypto-js";
 import { saveAs } from "file-saver";
 import { format, fromUnixTime } from "date-fns"; // Importing date-fns functions
+
+
+const key = "APAT!";
 
 const formatDateToISO = (timestamp) => {
   const parsedDate = fromUnixTime(timestamp);
@@ -43,14 +47,16 @@ const HistoryContent = ({ passport }) => {
   const tableData = maintenanceHistory.map((entry) => ({
     address: entry[0],
     timestamp: formatDateToISO(parseInt(entry[1])),
-    comments: entry[2],
+    comments: CryptoJS.AES.decrypt(entry[2] , key).toString(
+      CryptoJS.enc.Utf8
+    ),
   }));
 
   const handleDownloadClick = () => {
     // Convert table data to CSV format
     const csvData = [
       ["Maintenance Address", "Date & Time", "Comments"],
-      ...tableData.map((entry) => [entry.address, entry.timestamp, entry.comments]),
+      ...tableData.map((entry) => [entry.address, entry.timestamp,entry.comments ]),
     ].map((row) => row.join(","));
 
     // Create a Blob with the CSV data
@@ -76,7 +82,7 @@ const HistoryContent = ({ passport }) => {
             <Tr key={index}>
               <Td>{entry.address}</Td>
               <Td>{entry.timestamp}</Td>
-              <Td>{entry.comments}</Td>
+              <Td>{entry.comments }</Td>
             </Tr>
           ))}
         </Tbody>

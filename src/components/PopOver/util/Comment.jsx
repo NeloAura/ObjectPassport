@@ -107,9 +107,10 @@ const Form = ({
   buffer,
   photograph,
   expirationDate }) => {
+
   const [comment, setComment] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false); 
-  const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+  const [isWaiting, setIsWaiting] = useState(false);
+  const contractAddress ="0xA1A1A21A46988A13e3F0B55a51c909732A134eE4";
   const abi = ObjectPassportAbi.abi;
   const toast = useToast(); 
 
@@ -142,15 +143,25 @@ const Form = ({
         fullname,
         key
       ).toString();
+
+      const photoHash = CryptoJS.AES.encrypt(
+        photo,
+        key
+      ).toString();
+
+      const commentHash = CryptoJS.AES.encrypt(
+        comment,
+        key
+      ).toString();
   
       const assignMaintenanceParty = await contract.performMaintenance(
         id,
-        comment,
+        commentHash,
         name,
         fullNameHash,
         nationality,
         gender,
-        photo,
+        photoHash,
         formatDateToTimestamp(expirationDate)
       );
       await assignMaintenanceParty.wait();

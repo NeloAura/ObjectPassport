@@ -36,7 +36,7 @@ import ipfs from "../components/utils/ipfsApi";
 import { format, fromUnixTime } from "date-fns";
 
 const { ethers } = require("ethers");
-const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress = "0xA1A1A21A46988A13e3F0B55a51c909732A134eE4";
 const abi = ObjectPassportAbi.abi;
 const key = "APAT!";
 
@@ -128,12 +128,16 @@ const CertifierCard = () => {
       if (result) {
         console.log("=== result ===", result);
         const document = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
+        const documentHash = CryptoJS.AES.encrypt(
+          document,
+          key
+        ).toString();
         await requestAccount();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         setWaiting(true);
         const contract = new ethers.Contract(contractAddress, abi, signer);
-        const certify = await contract.certifyObject(id, document);
+        const certify = await contract.certifyObject(id, documentHash);
         await certify.wait();
 
         toast({
@@ -254,7 +258,9 @@ const CertifierCard = () => {
                           mb={"5"}
                           boxSize="100px"
                           objectFit="cover"
-                          src={passport.photograph}
+                          src={CryptoJS.AES.decrypt(passport.photograph, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                           alt="Profile"
                           fallbackSrc="https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
                         />
@@ -362,7 +368,9 @@ const CertifierCard = () => {
                         {passport[0][10] && (
                           <ButtonGroup>
                             <a
-                              href={passport[0][5]}
+                              href={CryptoJS.AES.decrypt(passport[0][5] , key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                               target="_blank"
                               rel="noreferrer"
                             >

@@ -45,7 +45,7 @@ import Image1 from "../assets/images/SPL.png";
 import ObjectPassportCard from "../pages/OwnerPassport";
 
 const { ethers } = require("ethers");
-const contractAddress = "0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress = "0xA1A1A21A46988A13e3F0B55a51c909732A134eE4";
 const abi = ObjectPassportAbi.abi;
 
 async function requestAccount() {

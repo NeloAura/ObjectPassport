@@ -29,7 +29,7 @@ import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectP
 import { useParams } from "react-router-dom";
 
 
-const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress ="0xA1A1A21A46988A13e3F0B55a51c909732A134eE4";
 const infuraApiKey = "d9e4d3de366746b88f8e6c91867018bd";
 const abi = ObjectPassportAbi.abi;
 const key = "APAT!";
@@ -144,7 +144,9 @@ const PassportEvent = () => {
                           mb={"5"}
                           boxSize="100px"
                           objectFit="cover"
-                          src={passport.photograph}
+                          src={CryptoJS.AES.decrypt(passport.photograph, key).toString(
+                          CryptoJS.enc.Utf8
+                        )}
                           alt="Profile"
                           fallbackSrc="https://scontent.fcur3-1.fna.fbcdn.net/v/t39.30808-6/240603964_4096273620501601_1563941666359861447_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i2nOPFapG88AX8708VQ&_nc_ht=scontent.fcur3-1.fna&oh=00_AfD2Z-n9qmh0Gs3ZHgOp4UfW7OQyfXoJ8HHcBusUxLS_Ig&oe=64E2F878"
                         />
@@ -185,7 +187,7 @@ const PassportEvent = () => {
                       <VStack>
                       <p>
                         <Badge colorScheme="teal">Fullname:</Badge>{" "}
-                        <Badge colorScheme="gray" > {CryptoJS.AES.decrypt(passport.fullname, key).toString(
+                        <Badge colorScheme="gray" > {CryptoJS.AES.decrypt(passport.fullname,key).toString(
                           CryptoJS.enc.Utf8
                         )}</Badge>
                       </p>
@@ -228,7 +230,9 @@ const PassportEvent = () => {
                       <History name={"History"} passport={passport} />
                       {passport[0][10] &&
                    
-                    <a href={passport[0][5]} target="_blank" rel="noreferrer" >
+                    <a href={CryptoJS.AES.decrypt(passport[0][5] , key).toString(
+                          CryptoJS.enc.Utf8
+                        )} target="_blank" rel="noreferrer" >
                   <Button rightIcon={<ExternalLinkIcon/>} bgColor={"#ffcc00"}>Certification✔️</Button>
                   </a>
                    

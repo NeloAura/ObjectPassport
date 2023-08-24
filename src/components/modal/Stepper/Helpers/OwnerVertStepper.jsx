@@ -4,10 +4,9 @@ import {
   Button,
   ButtonGroup,
   Box,
+  Flex
 } from "@chakra-ui/react";
-import create from '../../../../assets/gifs/Create.gif'
-import transaction from '../../../../assets/gifs/Transaction.gif'
-import card from '../../../../assets/images/MyFirstPassport.png'
+
 
 
 
@@ -29,7 +28,16 @@ function OVertStepper() {
         title: 'Creating a new passport',
         children: (
           <>
-            <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
+          <Box ml={"40px"} py="4">
+            <Flex>
+      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/w4bCk0jzyKm?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    </a>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/w4bCk0jzyKm/embed" width="300" height="360"></iframe>
+</div>
+
+      </Flex>
+      </Box>
             <ButtonGroup ml={"40px"}>
               <Button
                 onClick={next}
@@ -42,10 +50,19 @@ function OVertStepper() {
       },
       {
         name: 'step 2',
-        title: 'Assigning a certifying party',
+        title: 'Assigning a certifer and maintenance party',
         children: (
           <>
-            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
+          <Box ml={"40px"} py="4">
+            <Flex>
+      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/OR69RZf4sJn?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    </a>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/OR69RZf4sJn/embed" width="300" height="360"></iframe>
+</div>
+
+      </Flex>
+      </Box>
             <ButtonGroup  ml={"40px"}> 
               <Button
                 onClick={back}
@@ -64,10 +81,19 @@ function OVertStepper() {
       },
       {
         name: 'step 3',
-        title: 'Assigning a maintenance party',
+        title: 'Transfering passports to a different owner',
         children: (
           <>
-            <Box ml={"40px"} py="4"><img src={card} alt="loading..." /></Box>
+          <Box ml={"40px"} py="4">
+            <Flex>
+      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/NjJhJDPwJEw?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    </a>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/NjJhJDPwJEw/embed" width="450" height="360"></iframe>
+</div>
+
+      </Flex>
+      </Box>
             <ButtonGroup ml={"40px"}>
               <Button
                 onClick={back}

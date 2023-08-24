@@ -36,7 +36,7 @@ import ipfs from "./utils/ipfsApi";
 import ObjectPassportAbi from "../artifacts/contracts/ObjectPassport.sol/ObjectPassport.json";
 
 const { ethers } = require("ethers");
-const contractAddress ="0x57D72aC73CA959425916d9Bf2c313D49722C4c83";
+const contractAddress ="0xA1A1A21A46988A13e3F0B55a51c909732A134eE4";
 const abi = ObjectPassportAbi.abi;
 const key = "APAT!";
 
@@ -111,6 +111,10 @@ const Form = ({ firstFieldRef, onCancel }) => {
           fullName,
           key
         ).toString();
+        const photoHash = CryptoJS.AES.encrypt(
+          photo,
+          key
+        ).toString();
         
         const create = await contract.createPassport(
           name,
@@ -118,7 +122,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
           description,
           nationality,
           gender,
-          photo
+          photoHash
         );
         await create.wait();
         console.log("Passport created successfully!");
