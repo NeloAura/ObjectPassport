@@ -99,7 +99,7 @@ function Abus() {
                     <Text>
                       As a Frontend DApp Engineer, I merge technology and user
                       experience by crafting intuitive interfaces for DApps.
-                      Using React and Web3.js, I collaborate with designers to
+                      Using React and Ethers.js, I collaborate with designers to
                       bring concepts to life. My work aims to make
                       blockchain-powered applications visually appealing and
                       easy to navigate.

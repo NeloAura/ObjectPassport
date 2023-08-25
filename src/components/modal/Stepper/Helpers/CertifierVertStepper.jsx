@@ -4,17 +4,14 @@ import {
   Button,
   ButtonGroup,
   Box,
+  Flex
 } from "@chakra-ui/react";
-import create from '../../../../assets/gifs/Create.gif'
-import transaction from '../../../../assets/gifs/Transaction.gif'
-import card from '../../../../assets/images/MyFirstPassport.png'
+
 
 function CVertStepper() {
     const [step, setStep] = React.useState(0)
   
-    const back = () => {
-      setStep(step - 1)
-    }
+  
   
     const next = () => {
       setStep(step + 1)
@@ -23,131 +20,25 @@ function CVertStepper() {
     const steps = [
       {
         name: 'step 1',
-        title: 'View passports assigned to you',
+        title: 'Certify Passport assigned to you',
         children: (
           <>
-            <Box ml={"40px"} py="4"><img src={create} alt="loading..." /></Box>
-            <ButtonGroup ml={"40px"}>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="facebook"
-              >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
-      {
-        name: 'step 2',
-        title: 'Certify the passport',
-        children: (
-          <>
-            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
-            <ButtonGroup  ml={"40px"}> 
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >Back</Button>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="facebook"
-              >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
-      {
-        name: 'step 3',
-        title: 'Click the "Approve" button to certify the passport',
-        children: (
-          <>
-            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
-            <ButtonGroup  ml={"40px"}> 
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >Back</Button>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="facebook"
-              >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
-      {
-        name: 'step 4',
-        title: 'Enter your comment',
-        children: (
-          <>
-            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
-            <ButtonGroup  ml={"40px"}> 
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >Back</Button>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="facebook"
-              >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
+            <Box ml={"40px"} py="4">
+            <Flex>
+      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/9QoSUYwZLhf?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    </a>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/9QoSUYwZLhf/embed" width="300" height="360"></iframe>
+</div>
 
-      {
-        name: 'step 4',
-        title: 'Approve transcation in your metamask',
-        children: (
-          <>
-            <Box ml={"40px"} py="4"><img src={transaction} alt="loading..." /></Box>{' '}
-            <ButtonGroup  ml={"40px"}> 
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >Back</Button>
+      </Flex>
+      </Box>
+            <ButtonGroup ml={"40px"}>
               <Button
                 onClick={next}
                 isDisabled={step >= 3}
                 colorScheme="facebook"
               >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
-      {
-        name: 'step 4',
-        title: 'Find the certified passports approved by you ',
-        children: (
-          <>
-            <Box ml={"40px"} py="4"><img src={card} alt="loading..." /></Box>
-            <ButtonGroup ml={"40px"}>
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >
-                Back
-              </Button>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="whatsapp"
-              >
-                Complete
-              </Button>
             </ButtonGroup>
           </>
         ),
