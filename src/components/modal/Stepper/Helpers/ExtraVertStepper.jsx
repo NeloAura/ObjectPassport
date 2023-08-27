@@ -31,45 +31,14 @@ function EVertStepper() {
             <Box ml={"40px"} py="4">
             <Flex>
       <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
-    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/9QoSUYwZLhf?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/WkYmnkLzFJy?utm_source=embed&utm_medium=embed&utm_campaign=watch">
     </a>
-    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/9QoSUYwZLhf/embed" width="300" height="360"></iframe>
+    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/WkYmnkLzFJy/embed" width="480" height="360"></iframe>
 </div>
 
       </Flex>
       </Box>
             <ButtonGroup ml={"40px"}>
-              <Button
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="facebook"
-              >Next</Button>
-            </ButtonGroup>
-          </>
-        ),
-      },
-      {
-        name: 'step 2',
-        title: 'Scan QR-Code to identify passport',
-        children: (
-          <>
-            <Box ml={"40px"} py="4">
-            <Flex>
-      <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
-    <a style={{ position: 'absolute', top: '20px', right: '1rem', opacity: 0.8 }} href="https://clipchamp.com/watch/9QoSUYwZLhf?utm_source=embed&utm_medium=embed&utm_campaign=watch">
-    </a>
-    <iframe title='Connect' allow="autoplay;" allowfullscreen style={{ border: 'none' }} src="https://clipchamp.com/watch/9QoSUYwZLhf/embed" width="300" height="360"></iframe>
-</div>
-
-      </Flex>
-      </Box>
-            <ButtonGroup  ml={"40px"}> 
-              <Button
-                onClick={back}
-                isDisabled={step === 0}
-                variant="ghost"
-                colorScheme="twitter"
-              >Back</Button>
               <Button
                 onClick={next}
                 isDisabled={step >= 3}
