@@ -16,7 +16,7 @@ import {
   Input,
   Spinner,
   useToast,
-  Flex, // Import useToast
+  Flex, 
   Center,
 } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
@@ -39,8 +39,8 @@ const TextInput = React.forwardRef((props, ref) => {
 const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
   const [selectedFields, setSelectedFields] = useState([]);
   const [address, setAddress] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
-  const toast = useToast(); // Initialize the toast
+  const [isWaiting, setIsWaiting] = useState(false); 
+  const toast = useToast(); 
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -67,14 +67,13 @@ const Form = ({ onCancel, firstFieldRef, formbutton, id }) => {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
       const formattedAddress = ethers.utils.getAddress(address);
-      setIsWaiting(true); // Set waiting state
+      setIsWaiting(true); 
       const assignMaintenanceParty = await contract.designateMaintenanceParty(
         id,
         formattedAddress,
         editableFields
       );
       await assignMaintenanceParty.wait();
-      console.log("Maintenance party assigned successfully!");
       setIsWaiting(false);
 
       

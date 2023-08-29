@@ -130,7 +130,7 @@ const Form = ({
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
-      setIsWaiting(true); // Set waiting state
+      setIsWaiting(true); 
   
       let photo = photograph;
   
@@ -165,7 +165,6 @@ const Form = ({
         formatDateToTimestamp(expirationDate)
       );
       await assignMaintenanceParty.wait();
-      console.log("Maintenance Performed Successfully!");
       setIsWaiting(false);
   
       toast({

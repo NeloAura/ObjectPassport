@@ -43,7 +43,7 @@ const key = "APAT!";
 const CertifierCard = () => {
   const [passports, setPassports] = useState([]);
   const [buffer, setBuffer] = useState(null);
-  const toast = useToast(); // Initialize the toast
+  const toast = useToast(); 
   const [filteredPassports, setFilteredPassporst] = useState([]);
   const [loading, setLoading] = useState(true);
   const [waiting, setWaiting] = useState(false);
@@ -53,23 +53,23 @@ const CertifierCard = () => {
 
   useEffect(() => {
     const fetchPassports = async () => {
-      // Connect to the Ethereum network
+     
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      // Load the smart contract
+   
       const contract = new ethers.Contract(contractAddress, abi, provider);
       try {
-        // Get the total number of passports
+       
         const passportCount = await contract.passportCount();
         setUserWalletAddress(provider.provider.selectedAddress);
 
-        // Fetch passport details
+      
         const fetchedPassports = [];
         for (let i = 1; i <= passportCount; i++) {
           const passport = await contract.getPassportDetails(i);
           fetchedPassports.push({ id: i, ...passport });
         }
 
-        // Update the state with fetched passports
+        
         setPassports(fetchedPassports);
         setFilteredPassporst(
           passports.filter(
@@ -95,11 +95,10 @@ const CertifierCard = () => {
     const file = event.target.files[0];
 
     const reader = new window.FileReader();
-    reader.readAsArrayBuffer(file); // Read buffered file
+    reader.readAsArrayBuffer(file); 
 
-    // Callback
+    
     reader.onloadend = () => {
-      console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
     };
   };
@@ -126,7 +125,6 @@ const CertifierCard = () => {
     try {
       const result = await ipfs.add(buffer);
       if (result) {
-        console.log("=== result ===", result);
         const document = `https://ap.infura-ipfs.io/ipfs/${result.path}`;
         const documentHash = CryptoJS.AES.encrypt(
           document,
@@ -147,13 +145,12 @@ const CertifierCard = () => {
           duration: 5000,
           isClosable: true,
         });
-        console.log("Certification successfull!");
-        // You can handle the success message and any other necessary actions here
+        
       }
     } catch (error) {
       console.error("Error Certifying:", error);
 
-      // Handle error, e.g., show an error message to the user
+      
     } finally {
       setWaiting(false);
     }

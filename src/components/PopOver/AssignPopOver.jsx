@@ -37,9 +37,8 @@ const TextInput = React.forwardRef((props, ref) => {
 
 const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
   const [address, setAddress] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
-  const toast = useToast(); // Initialize the toast
-
+  const [isWaiting, setIsWaiting] = useState(false); 
+  const toast = useToast(); 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
@@ -73,7 +72,7 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
       setIsWaiting(true);
       const assigncertifyingParty = await contract.designateCertifyingParty(id, formattedAddress);
       await assigncertifyingParty.wait();
-      console.log("Passport assigned successfully!");
+      
       setIsWaiting(false); 
     } else if (formbutton === 'Transfer') {
       
@@ -96,7 +95,6 @@ const Form = ({ firstFieldRef, onCancel, formbutton, id }) => {
       setIsWaiting(true); 
       const transferPassport = await contract.changeOwner(formattedAddress, id);
       await transferPassport.wait();
-      console.log("Passport transferred successfully!");
       setIsWaiting(false); 
     } else {
       console.warn("Unknown form button:", formbutton);

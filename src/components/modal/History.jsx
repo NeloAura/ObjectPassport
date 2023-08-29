@@ -23,7 +23,7 @@ import { InfoOutlineIcon, DownloadIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import CryptoJS from "crypto-js";
 import { saveAs } from "file-saver";
-import { format, fromUnixTime } from "date-fns"; // Importing date-fns functions
+import { format, fromUnixTime } from "date-fns";
 
 
 const key = "APAT!";
@@ -53,16 +53,16 @@ const HistoryContent = ({ passport }) => {
   }));
 
   const handleDownloadClick = () => {
-    // Convert table data to CSV format
+    
     const csvData = [
       ["Maintenance Address", "Date & Time", "Comments"],
       ...tableData.map((entry) => [entry.address, entry.timestamp,entry.comments ]),
     ].map((row) => row.join(","));
 
-    // Create a Blob with the CSV data
+   
     const blob = new Blob([csvData.join("\n")], { type: "text/csv;charset=utf-8" });
 
-    // Save the Blob as a CSV file
+    
     saveAs(blob, "maintenance_history.csv");
   };
 

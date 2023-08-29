@@ -20,7 +20,6 @@ function QRScanner() {
   const toast = useToast();
   const navigate = useNavigate();
   const onNewScanResult = (decodedText) => {
-	  console.log("App [result]", decodedText);
 	  toast({
         position: "bottom-right",
         title: "QRCode Scanned",

@@ -46,23 +46,23 @@ const ObjectPassportCard = () => {
 
   useEffect(() => {
     const fetchPassports = async () => {
-      // Connect to the Ethereum network
+     
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      // Load the smart contract
+      
       const contract = new ethers.Contract(contractAddress, abi, provider);
       try {
-        // Get the total number of passports
+        
         const passportCount = await contract.passportCount();
         setUserWalletAddress(provider.provider.selectedAddress);
 
-        // Fetch passport details
+       
         const fetchedPassports = [];
         for (let i = 1; i <= passportCount; i++) {
           const passport = await contract.getPassportDetails(i);
           fetchedPassports.push({ id: i, ...passport });
         }
 
-        // Update the state with fetched passports
+      
         setPassports(fetchedPassports);
         setFilteredPassporst(
           passports.filter(

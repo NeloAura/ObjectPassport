@@ -19,7 +19,7 @@ import {
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import qrcode from "qrcode";
-import { saveAs } from "file-saver"; // Import the saveAs function from file-saver
+import { saveAs } from "file-saver"; 
 
 const Content = ({ id, setQRCodeDataURL , qrCodeDataURL }) => {
   useEffect(() => {

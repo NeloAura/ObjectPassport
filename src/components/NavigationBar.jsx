@@ -60,24 +60,24 @@ const Form = ({ firstFieldRef, onCancel }) => {
   const [gender, setGender] = useState("");
   const [fullName, setFullName] = useState("");
   const [buffer, setBuffer] = useState(null);
-  const [isWaiting, setIsWaiting] = useState(false); // Track if we're waiting for the transaction
-  const toast = useToast(); // Initialize the toast
+  const [isWaiting, setIsWaiting] = useState(false); 
+  const toast = useToast(); 
 
   const captureFile = (event) => {
     event.preventDefault();
     const file = event.target.files[0];
     
     const reader = new window.FileReader();
-    reader.readAsArrayBuffer(file);  // Read buffered file
+    reader.readAsArrayBuffer(file);  
 
-    // Callback
+   
     reader.onloadend = () => {
       setBuffer(Buffer.from(reader.result));
       
     };
   };
 
-  useEffect(() => {
+useEffect(() => {
     if (buffer) {
       console.log('=== buffer ===', buffer);
     }
@@ -85,7 +85,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
 
   const createPassport = async () => {
     try {
-      // Check if any of the required fields are null
+      
       if (!name || !fullName || !nationality || !gender || !description || !buffer) {
         toast({
           title: "Please fill all the fields",
@@ -94,7 +94,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
           duration: 5000,
           isClosable: true,
         });
-        return; // Don't proceed if any field is null
+        return; 
       }
   
       const result = await ipfs.add(buffer);
@@ -125,7 +125,7 @@ const Form = ({ firstFieldRef, onCancel }) => {
           photoHash
         );
         await create.wait();
-        console.log("Passport created successfully!");
+        
         setIsWaiting(false);
   
         // Show success toast
@@ -139,9 +139,9 @@ const Form = ({ firstFieldRef, onCancel }) => {
       }
     } catch (error) {
       console.error("Error creating passport:", error);
-      // Handle error, e.g., show an error message to the user
+      
     } finally {
-      onCancel(); // Close the popover
+      onCancel(); 
     }
   };
   

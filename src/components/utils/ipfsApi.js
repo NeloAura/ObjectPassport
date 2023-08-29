@@ -1,4 +1,3 @@
-//using the infura.io node, otherwise ipfs requires you to run a daemon on your own computer/server. See IPFS.io docs
 import { create } from 'ipfs-http-client';
 import { Buffer } from 'buffer';
 
@@ -15,8 +14,6 @@ const ipfs = create({
   },
 });
 
-ipfs.pin.add('QmeGAVddnBSnKc1DLE7DLV9uuTqo5F7QbaveTjr45JUdQn').then((res) => {
-  console.log(res);
-});
+ipfs.pin.add('QmeGAVddnBSnKc1DLE7DLV9uuTqo5F7QbaveTjr45JUdQn');
 
 export default ipfs;

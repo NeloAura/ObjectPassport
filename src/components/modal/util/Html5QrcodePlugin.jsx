@@ -47,5 +47,6 @@ const Html5QrcodePlugin = (props) => {
         <div id={qrcodeRegionId} />
     );
 };
+//plugin from  https://github.com/scanapp-org/html5-qrcode-react
 
 export default Html5QrcodePlugin;

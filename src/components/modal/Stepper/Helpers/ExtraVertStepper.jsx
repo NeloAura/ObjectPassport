@@ -14,9 +14,6 @@ import {
 function EVertStepper() {
     const [step, setStep] = React.useState(0)
   
-    const back = () => {
-      setStep(step - 1)
-    }
   
     const next = () => {
       setStep(step + 1)

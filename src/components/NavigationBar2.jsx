@@ -84,12 +84,12 @@ const Form = ({ firstFieldRef, onCancel }) => {
     };
   };
 
-  useEffect(() => {
+useEffect(() => {
     if (buffer) {
       console.log("=== buffer ===", buffer);
     }
   }, [buffer]);
-
+ 
   const createPassport = async () => {
     try {
       // Check if any of the required fields are null
@@ -121,7 +121,6 @@ const Form = ({ firstFieldRef, onCancel }) => {
           photo
         );
         await create.wait();
-        console.log("Passport created successfully!");
         setIsWaiting(false);
 
         // Show success toast

@@ -48,7 +48,7 @@ const key = "APAT!";
 
 const MaintenanceCard = () => {
   const theme = extendTheme({
-    // Add your theme configurations here
+    
   });
 
   const [passports, setPassports] = useState([]);
@@ -68,23 +68,23 @@ const MaintenanceCard = () => {
 
   useEffect(() => {
     const fetchPassports = async () => {
-      // Connect to the Ethereum network
+     
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      // Load the smart contract
+    
       const contract = new ethers.Contract(contractAddress, abi, provider);
       try {
-        // Get the total number of passports
+        
         const passportCount = await contract.passportCount();
         setUserWalletAddress(provider.provider.selectedAddress);
 
-        // Fetch passport details
+        
         const fetchedPassports = [];
         for (let i = 1; i <= passportCount; i++) {
           const passport = await contract.getPassportDetails(i);
           fetchedPassports.push({ id: i, ...passport });
         }
 
-        // Update the state with fetched passports
+        
         setPassports(fetchedPassports);
         setFilteredPassporst(
           passports.filter(
@@ -110,11 +110,10 @@ const MaintenanceCard = () => {
     const file = event.target.files[0];
 
     const reader = new window.FileReader();
-    reader.readAsArrayBuffer(file); // Read buffered file
+    reader.readAsArrayBuffer(file); 
 
-    // Callback
+    
     reader.onloadend = () => {
-      console.log("Buffer data: ", Buffer(reader.result));
       setBuffer(Buffer.from(reader.result));
       setHasPhoto(true);
     };
